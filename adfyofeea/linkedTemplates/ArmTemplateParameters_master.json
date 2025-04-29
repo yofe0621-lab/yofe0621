@@ -1,0 +1,54 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adfyofeea"
+		},
+		"AzureBlobStoragelivemode_connectionString": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1_accountKey": {
+			"value": ""
+		},
+		"AzureSqlDatabase1_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=;Initial Catalog="
+		},
+		"DynamicsCrm1_servicePrincipalCredential": {
+			"value": ""
+		},
+		"OData1_password": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"value": "https://yofeadlsgen2.dfs.core.windows.net/"
+		},
+		"DynamicsCrm1_properties_typeProperties_servicePrincipalId": {
+			"value": "asdf"
+		},
+		"HttpServer1_properties_typeProperties_url": {
+			"value": "https://dummy.restapiexample.com/api/v1/employees"
+		},
+		"OData1_properties_typeProperties_url": {
+			"value": "test"
+		},
+		"OData1_properties_typeProperties_userName": {
+			"value": "test"
+		},
+		"RestService1_properties_typeProperties_url": {
+			"value": "https://dummy.restapiexample.com/api/v1/employees"
+		},
+		"AzureBlobStorage579_properties_privateLinkResourceId": {
+			"value": "/subscriptions/d1e34e00-3965-4018-96a9-169755063128/resourceGroups/YOFERG/providers/Microsoft.Storage/storageAccounts/yofeblobacct"
+		},
+		"AzureBlobStorage579_properties_groupId": {
+			"value": "blob"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
