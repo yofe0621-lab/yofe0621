@@ -1,0 +1,16 @@
+{
+	"name": "DynamicsCrm1",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "DynamicsCrm",
+		"typeProperties": {
+			"deploymentType": "Online",
+			"serviceUri": "'https://unify-dm2.crm6.dynamics.com",
+			"authenticationType": "AADServicePrincipal",
+			"servicePrincipalId": "asdf",
+			"servicePrincipalCredentialType": "ServicePrincipalKey",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQENEM0ZDMjRDLTA3MEYtNDMyRC1BRjk3LUFFQTU0M0Y1OEQyRV80Zjk3NDdmMy1lYzNjLTRkODktODg0OS0xMmM5ZmY0OGU2NzkiDQp9"
+		}
+	}
+}
