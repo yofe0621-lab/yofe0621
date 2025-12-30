@@ -1,7 +1,6 @@
 {
 	"name": "livemodetest",
 	"properties": {
-		"description": "test",
 		"activities": [
 			{
 				"name": "Copy data1",
