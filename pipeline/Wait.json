@@ -8,7 +8,7 @@
 				"dependsOn": [],
 				"userProperties": [],
 				"typeProperties": {
-					"waitTimeInSeconds": 300
+					"waitTimeInSeconds": 30
 				}
 			},
 			{
@@ -41,7 +41,7 @@
 			}
 		},
 		"annotations": [],
-		"lastPublishTime": "2024-09-29T09:16:47Z"
+		"lastPublishTime": "2025-04-29T02:34:54Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

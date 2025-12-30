@@ -1,9 +1,11 @@
 {
 	"name": "livemodetest",
 	"properties": {
+		"description": "test",
 		"activities": [
 			{
 				"name": "Copy data1",
+				"description": "test",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -50,7 +52,7 @@
 			}
 		],
 		"annotations": [],
-		"lastPublishTime": "2024-09-29T09:16:48Z"
+		"lastPublishTime": "2025-12-29T09:47:51Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }
