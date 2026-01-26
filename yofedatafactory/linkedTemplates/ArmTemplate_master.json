@@ -20,17 +20,9 @@
 			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'",
 			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=;Initial Catalog="
 		},
-		"Dataverse1_servicePrincipalCredential": {
-			"type": "secureString",
-			"metadata": "Secure string for 'servicePrincipalCredential' of 'Dataverse1'"
-		},
 		"DynamicsCrm1_servicePrincipalCredential": {
 			"type": "secureString",
 			"metadata": "Secure string for 'servicePrincipalCredential' of 'DynamicsCrm1'"
-		},
-		"MySql1_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'MySql1'"
 		},
 		"OData1_password": {
 			"type": "secureString",
@@ -40,10 +32,6 @@
 			"type": "string",
 			"defaultValue": "https://yofeadlsgen2.dfs.core.windows.net/"
 		},
-		"Dataverse1_properties_typeProperties_servicePrincipalId": {
-			"type": "string",
-			"defaultValue": "asdf"
-		},
 		"DynamicsCrm1_properties_typeProperties_servicePrincipalId": {
 			"type": "string",
 			"defaultValue": "asdf"
@@ -51,18 +39,6 @@
 		"HttpServer1_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://dummy.restapiexample.com/api/v1/employees"
-		},
-		"MySql1_properties_typeProperties_server": {
-			"type": "string",
-			"defaultValue": "yofemysql.mysql.database.azure.com"
-		},
-		"MySql1_properties_typeProperties_database": {
-			"type": "string",
-			"defaultValue": "test"
-		},
-		"MySql1_properties_typeProperties_username": {
-			"type": "string",
-			"defaultValue": "yofe"
 		},
 		"OData1_properties_typeProperties_url": {
 			"type": "string",
@@ -161,24 +137,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"Dataverse1_servicePrincipalCredential": {
-						"value": "[parameters('Dataverse1_servicePrincipalCredential')]"
-					},
-					"MySql1_password": {
-						"value": "[parameters('MySql1_password')]"
-					},
-					"Dataverse1_properties_typeProperties_servicePrincipalId": {
-						"value": "[parameters('Dataverse1_properties_typeProperties_servicePrincipalId')]"
-					},
-					"MySql1_properties_typeProperties_server": {
-						"value": "[parameters('MySql1_properties_typeProperties_server')]"
-					},
-					"MySql1_properties_typeProperties_database": {
-						"value": "[parameters('MySql1_properties_typeProperties_database')]"
-					},
-					"MySql1_properties_typeProperties_username": {
-						"value": "[parameters('MySql1_properties_typeProperties_username')]"
 					},
 					"AzureBlobStorage579_properties_privateLinkResourceId": {
 						"value": "[parameters('AzureBlobStorage579_properties_privateLinkResourceId')]"

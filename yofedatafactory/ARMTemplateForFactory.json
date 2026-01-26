@@ -20,17 +20,9 @@
 			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'",
 			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=;Initial Catalog="
 		},
-		"Dataverse1_servicePrincipalCredential": {
-			"type": "secureString",
-			"metadata": "Secure string for 'servicePrincipalCredential' of 'Dataverse1'"
-		},
 		"DynamicsCrm1_servicePrincipalCredential": {
 			"type": "secureString",
 			"metadata": "Secure string for 'servicePrincipalCredential' of 'DynamicsCrm1'"
-		},
-		"MySql1_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'MySql1'"
 		},
 		"OData1_password": {
 			"type": "secureString",
@@ -40,10 +32,6 @@
 			"type": "string",
 			"defaultValue": "https://yofeadlsgen2.dfs.core.windows.net/"
 		},
-		"Dataverse1_properties_typeProperties_servicePrincipalId": {
-			"type": "string",
-			"defaultValue": "asdf"
-		},
 		"DynamicsCrm1_properties_typeProperties_servicePrincipalId": {
 			"type": "string",
 			"defaultValue": "asdf"
@@ -51,18 +39,6 @@
 		"HttpServer1_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://dummy.restapiexample.com/api/v1/employees"
-		},
-		"MySql1_properties_typeProperties_server": {
-			"type": "string",
-			"defaultValue": "yofemysql.mysql.database.azure.com"
-		},
-		"MySql1_properties_typeProperties_database": {
-			"type": "string",
-			"defaultValue": "test"
-		},
-		"MySql1_properties_typeProperties_username": {
-			"type": "string",
-			"defaultValue": "yofe"
 		},
 		"OData1_properties_typeProperties_url": {
 			"type": "string",
@@ -311,6 +287,11 @@
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"test": {
+						"type": "String"
+					}
 				},
 				"annotations": [],
 				"lastPublishTime": "2024-11-19T07:27:14Z"
@@ -738,33 +719,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Dataverse1')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "CommonDataServiceForApps",
-				"typeProperties": {
-					"deploymentType": "Online",
-					"serviceUri": "https://test.crm.dynamics.com",
-					"authenticationType": "AADServicePrincipal",
-					"servicePrincipalId": "[parameters('Dataverse1_properties_typeProperties_servicePrincipalId')]",
-					"servicePrincipalCredential": {
-						"type": "SecureString",
-						"value": "[parameters('Dataverse1_servicePrincipalCredential')]"
-					},
-					"servicePrincipalCredentialType": "ServicePrincipalKey"
-				},
-				"connectVia": {
-					"referenceName": "integrationRuntime1",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime1')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/DynamicsCrm1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -799,36 +753,6 @@
 				}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/MySql1')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "MySql",
-				"typeProperties": {
-					"server": "[parameters('MySql1_properties_typeProperties_server')]",
-					"port": 3306,
-					"database": "[parameters('MySql1_properties_typeProperties_database')]",
-					"username": "[parameters('MySql1_properties_typeProperties_username')]",
-					"sslMode": 0,
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('MySql1_password')]"
-					},
-					"driverVersion": "v2",
-					"connectionTimeout": 600,
-					"allowPublicKeyRetrieval": true
-				},
-				"connectVia": {
-					"referenceName": "integrationRuntime2",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime2')]"
-			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/OData1')]",
@@ -923,37 +847,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/Wait')]"
 			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/integrationRuntime1')]",
-			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "Managed",
-				"typeProperties": {
-					"computeProperties": {
-						"location": "AutoResolve",
-						"dataFlowProperties": {
-							"computeType": "General",
-							"coreCount": 8,
-							"timeToLive": 10,
-							"cleanup": false,
-							"customProperties": []
-						}
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/integrationRuntime2')]",
-			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "SelfHosted",
-				"typeProperties": {}
-			},
-			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/ParquetSrc')]",

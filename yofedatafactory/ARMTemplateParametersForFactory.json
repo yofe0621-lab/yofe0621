@@ -14,13 +14,7 @@
 		"AzureSqlDatabase1_connectionString": {
 			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=;Initial Catalog="
 		},
-		"Dataverse1_servicePrincipalCredential": {
-			"value": ""
-		},
 		"DynamicsCrm1_servicePrincipalCredential": {
-			"value": ""
-		},
-		"MySql1_password": {
 			"value": ""
 		},
 		"OData1_password": {
@@ -29,23 +23,11 @@
 		"AzureDataLakeStorage1_properties_typeProperties_url": {
 			"value": "https://yofeadlsgen2.dfs.core.windows.net/"
 		},
-		"Dataverse1_properties_typeProperties_servicePrincipalId": {
-			"value": "asdf"
-		},
 		"DynamicsCrm1_properties_typeProperties_servicePrincipalId": {
 			"value": "asdf"
 		},
 		"HttpServer1_properties_typeProperties_url": {
 			"value": "https://dummy.restapiexample.com/api/v1/employees"
-		},
-		"MySql1_properties_typeProperties_server": {
-			"value": "yofemysql.mysql.database.azure.com"
-		},
-		"MySql1_properties_typeProperties_database": {
-			"value": "test"
-		},
-		"MySql1_properties_typeProperties_username": {
-			"value": "yofe"
 		},
 		"OData1_properties_typeProperties_url": {
 			"value": "test"
