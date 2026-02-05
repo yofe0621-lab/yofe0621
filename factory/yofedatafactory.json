@@ -1,0 +1,9 @@
+{
+	"name": "yofedatafactory",
+	"location": "EastUS",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "cbca89ae-7c9b-476b-a10a-d9ae9513eedf",
+		"tenantId": "939cfbdf-d5bd-49d2-acca-894e3b56e3f6"
+	}
+}
