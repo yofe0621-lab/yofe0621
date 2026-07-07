@@ -188,8 +188,8 @@
 		"AzureDataLakeStoragecn_sasUri": {
 			"value": ""
 		},
-		"AzureDatabricks1_properties_typeProperties_existingClusterId": {
-			"value": "0413-045743-0vb84rlo"
+		"AzureDatabricks1_properties_typeProperties_domain": {
+			"value": "https://adb-3057292927350060.0.azuredatabricks.net"
 		},
 		"AzureKeyVault1_properties_typeProperties_baseUrl": {
 			"value": "https://yofeakv.vault.azure.net/"

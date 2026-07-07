@@ -252,9 +252,9 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'sasUri' of 'AzureDataLakeStoragecn'"
 		},
-		"AzureDatabricks1_properties_typeProperties_existingClusterId": {
+		"AzureDatabricks1_properties_typeProperties_domain": {
 			"type": "string",
-			"defaultValue": "0413-045743-0vb84rlo"
+			"defaultValue": "https://adb-3057292927350060.0.azuredatabricks.net"
 		},
 		"AzureKeyVault1_properties_typeProperties_baseUrl": {
 			"type": "string",
@@ -12799,12 +12799,12 @@
 				"annotations": [],
 				"type": "AzureDatabricks",
 				"typeProperties": {
-					"domain": "https://adb-3057292927350060.0.azuredatabricks.net",
+					"domain": "[parameters('AzureDatabricks1_properties_typeProperties_domain')]",
 					"accessToken": {
 						"type": "SecureString",
 						"value": "[parameters('AzureDatabricks1_accessToken')]"
 					},
-					"existingClusterId": "[parameters('AzureDatabricks1_properties_typeProperties_existingClusterId')]"
+					"existingClusterId": "0413-045743-0vb84rlo"
 				}
 			},
 			"dependsOn": []
@@ -15351,7 +15351,6 @@
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
 						"     errorHandlingOption: 'allErrors',",
-						"     outputRejectedData: true,",
 						"     transactionCommit: 'batch',",
 						"     reportSuccessOnError: false) ~> sink1"
 					]
