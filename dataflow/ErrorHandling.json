@@ -49,7 +49,6 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'allErrors',",
-				"     outputRejectedData: true,",
 				"     transactionCommit: 'batch',",
 				"     reportSuccessOnError: false) ~> sink1"
 			]
