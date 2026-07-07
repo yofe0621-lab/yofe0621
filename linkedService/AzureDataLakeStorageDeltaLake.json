@@ -1,0 +1,11 @@
+{
+	"name": "AzureDataLakeStorageDeltaLake",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://adlsyofe.dfs.core.windows.net/"
+		}
+	}
+}

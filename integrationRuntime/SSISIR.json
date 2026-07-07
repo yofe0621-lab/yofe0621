@@ -1,0 +1,37 @@
+{
+	"name": "SSISIR",
+	"properties": {
+		"type": "Managed",
+		"typeProperties": {
+			"computeProperties": {
+				"location": "Australia East",
+				"nodeSize": "Standard_D8_v3",
+				"numberOfNodes": 2,
+				"maxParallelExecutionsPerNode": 8
+			},
+			"ssisProperties": {
+				"catalogInfo": {
+					"catalogServerEndpoint": "yofesql.database.windows.net",
+					"catalogAdminUserName": "yofe",
+					"catalogAdminPassword": {
+						"type": "SecureString",
+						"value": "**********"
+					},
+					"catalogPricingTier": "S1"
+				},
+				"customSetupScriptProperties": {
+					"blobContainerUri": "https://adlsyofe.blob.core.windows.net/copyactivity-logs",
+					"sasToken": {
+						"type": "SecureString",
+						"value": "**********"
+					}
+				},
+				"edition": "Standard",
+				"licenseType": "BasePrice"
+			},
+			"customerVirtualNetwork": {
+				"subnetId": "/subscriptions/26c1fddb-1b8b-4755-a146-a7f8bfe73f39/resourceGroups/yoferg/providers/Microsoft.Network/virtualNetworks/vnet-yofesqlmi/subnets/ssisexpress"
+			}
+		}
+	}
+}

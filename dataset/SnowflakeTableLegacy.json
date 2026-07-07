@@ -1,0 +1,17 @@
+{
+	"name": "SnowflakeTableLegacy",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SnowflakeLegacy",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SnowflakeTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "test",
+			"table": "test"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

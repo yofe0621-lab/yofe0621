@@ -1,0 +1,35 @@
+{
+	"name": "AzureSqlTableParam",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabaseParam",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"hostname": {
+					"value": "@dataset().hostname",
+					"type": "Expression"
+				},
+				"dbname": {
+					"value": "@dataset().dbname",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"hostname": {
+				"type": "string"
+			},
+			"dbname": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "StrSrc"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

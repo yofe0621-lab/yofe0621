@@ -1,0 +1,15 @@
+{
+	"name": "AzureDataLakeStorageVnet",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://adlsyofe.dfs.core.windows.net/"
+		},
+		"connectVia": {
+			"referenceName": "mvnetirtest",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

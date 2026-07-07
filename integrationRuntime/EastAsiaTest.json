@@ -1,0 +1,32 @@
+{
+	"name": "EastAsiaTest",
+	"properties": {
+		"type": "Managed",
+		"typeProperties": {
+			"computeProperties": {
+				"location": "East Asia",
+				"nodeSize": "Standard_D2_v3",
+				"numberOfNodes": 1,
+				"maxParallelExecutionsPerNode": 1
+			},
+			"ssisProperties": {
+				"catalogInfo": {
+					"catalogServerEndpoint": "sqlyofe.database.windows.net",
+					"catalogPricingTier": "S2"
+				},
+				"customSetupScriptProperties": {
+					"blobContainerUri": "https://blobyofe.blob.core.windows.net/ssisir",
+					"sasToken": {
+						"type": "SecureString",
+						"value": "**********"
+					}
+				},
+				"edition": "Standard",
+				"licenseType": "BasePrice"
+			},
+			"customerVirtualNetwork": {
+				"subnetId": "/subscriptions/26c1fddb-1b8b-4755-a146-a7f8bfe73f39/resourceGroups/yoferg/providers/Microsoft.Network/virtualNetworks/eassisir/subnets/default"
+			}
+		}
+	}
+}

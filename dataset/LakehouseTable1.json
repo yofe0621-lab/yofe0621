@@ -1,0 +1,16 @@
+{
+	"name": "LakehouseTable1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Lakehouse1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "LakehouseTable",
+		"schema": [],
+		"typeProperties": {
+			"table": "publicholidays"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

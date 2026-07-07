@@ -1,0 +1,180 @@
+{
+	"name": "ParamTest",
+	"properties": {
+		"activities": [
+			{
+				"name": "Data flow1",
+				"type": "ExecuteDataFlow",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "dataflowParamTest",
+						"type": "DataFlowReference",
+						"parameters": {
+							"hostname": {
+								"value": "'@{variables('hostnamevar')}'",
+								"type": "Expression"
+							},
+							"dbname": {
+								"value": "'@{variables('dbnamevar')}'",
+								"type": "Expression"
+							}
+						},
+						"datasetParameters": {
+							"source1": {
+								"hostname": {
+									"value": "@variables('hostnamevar')",
+									"type": "Expression"
+								},
+								"dbname": {
+									"value": "@variables('dbnamevar')",
+									"type": "Expression"
+								}
+							},
+							"sink1": {
+								"hostname": {
+									"value": "@variables('hostnamevar')",
+									"type": "Expression"
+								},
+								"dbname": {
+									"value": "@variables('dbnamevar')",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					"integrationRuntime": {
+						"referenceName": "mvnetirtest",
+						"type": "IntegrationRuntimeReference"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "Lookup1",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "AzureSqlTableControlTbl",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup1').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Data flow2",
+							"type": "ExecuteDataFlow",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataflow": {
+									"referenceName": "dataflowParamTest",
+									"type": "DataFlowReference",
+									"parameters": {
+										"hostname": {
+											"value": "'@{item().hostname}'",
+											"type": "Expression"
+										},
+										"dbname": {
+											"value": "'@{item().dbname}'",
+											"type": "Expression"
+										}
+									},
+									"datasetParameters": {
+										"source1": {
+											"hostname": {
+												"value": "@item().hostname",
+												"type": "Expression"
+											},
+											"dbname": {
+												"value": "@item().dbname",
+												"type": "Expression"
+											}
+										},
+										"sink1": {
+											"hostname": {
+												"value": "@item().hostname",
+												"type": "Expression"
+											},
+											"dbname": {
+												"value": "@item().dbname",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								"integrationRuntime": {
+									"referenceName": "mvnetirtest",
+									"type": "IntegrationRuntimeReference"
+								},
+								"traceLevel": "Coarse"
+							}
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"hostnamevar": {
+				"type": "String",
+				"defaultValue": "sqlyofe.database.windows.net"
+			},
+			"dbnamevar": {
+				"type": "String",
+				"defaultValue": "yofetest"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-08-13T06:26:30Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

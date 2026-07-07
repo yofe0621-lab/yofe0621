@@ -7,8 +7,14 @@
 		"typeProperties": {
 			"url": "test",
 			"authenticationType": "Basic",
-			"userName": "test",
-			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDg0Rjc3QzcyLTc1QzctNDU4RC1CMkY5LTlDRDk1NjQ2MUMxQl8xNGRiOWM3OS00YTRjLTQ2YjEtOGY3Yi03ZGE3MGJlZTM3ZWUiDQp9"
+			"userName": "yofe",
+			"authHeaders": {
+				"sap-client": {
+					"type": "SecureString",
+					"value": "**********"
+				}
+			},
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDc3OERBRkE0LUZGREMtNEMzMy05RTY5LTlDNDFFMkM2RjdCNV81NjE5ZmVlZS04NjAxLTQ1MWYtYTNjYS0zM2MzN2M4NGEzODQiDQp9"
 		}
 	}
 }

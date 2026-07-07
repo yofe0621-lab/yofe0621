@@ -1,0 +1,20 @@
+{
+	"name": "SapOdp1",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SapOdp",
+		"typeProperties": {
+			"clientId": "test",
+			"sncMode": false,
+			"userName": "yofe",
+			"server": "test",
+			"systemNumber": "test",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI5ZDJhNTJjOS1jYjhlLTQ2N2QtYjRiZi02NTEyYTNhMDU3OWUiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "SHIRyofe",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

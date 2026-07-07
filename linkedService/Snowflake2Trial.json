@@ -1,0 +1,20 @@
+{
+	"name": "Snowflake2Trial",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SnowflakeV2",
+		"typeProperties": {
+			"authenticationType": "Basic",
+			"accountIdentifier": "HIQQPFL-JD70147",
+			"user": "yofeadmin",
+			"database": "TEST",
+			"warehouse": "COMPUTE_WH",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIzMjYyNmU3ZC01Y2I2LTQ2YzgtYWI3YS0xZjRjMTVhMmU0MjYiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "SHIRyofe",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

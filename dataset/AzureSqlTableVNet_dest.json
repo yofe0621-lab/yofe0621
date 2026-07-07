@@ -1,0 +1,182 @@
+{
+	"name": "AzureSqlTableVNet_dest",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Id",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "SinkCreatedOn",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "SinkModifiedOn",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "priceincludesalestax",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "ispublicsector_it",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "sysdatastatecode",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "bankcustpaymidtable",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "clearingperiod",
+				"type": "nvarchar"
+			},
+			{
+				"name": "custgroup",
+				"type": "nvarchar"
+			},
+			{
+				"name": "defaultdimension",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "paymtermid",
+				"type": "nvarchar"
+			},
+			{
+				"name": "taxgroupid",
+				"type": "nvarchar"
+			},
+			{
+				"name": "taxperiodpaymentcode_pl",
+				"type": "nvarchar"
+			},
+			{
+				"name": "custwriteoffrefrecid",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "custaccountnumseq",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "accountingcurrencyexchangeratetype",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "reportingcurrencyexchangeratetype",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "modifieddatetime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "modifiedby",
+				"type": "nvarchar"
+			},
+			{
+				"name": "modifiedtransactionid",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "createddatetime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "createdby",
+				"type": "nvarchar"
+			},
+			{
+				"name": "createdtransactionid",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "dataareaid",
+				"type": "nvarchar"
+			},
+			{
+				"name": "recversion",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "partition",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "sysrowversion",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "recid",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "tableid",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "versionnumber",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "createdon",
+				"type": "datetimeoffset",
+				"scale": 7
+			},
+			{
+				"name": "modifiedon",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "IsDelete",
+				"type": "bit"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "custgroupcopy"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

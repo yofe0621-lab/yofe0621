@@ -1,0 +1,17 @@
+{
+	"name": "DataverseInitial",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "generaljournalentry"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

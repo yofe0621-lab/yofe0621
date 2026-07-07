@@ -1,0 +1,21 @@
+{
+	"name": "InformixLS",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "Informix",
+		"typeProperties": {
+			"connectionString": {
+				"type": "SecureString",
+				"value": "**********"
+			},
+			"authenticationType": "Basic",
+			"userName": "informix",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI1ZDA4NDI5OC0wOWFlLTQ2Y2QtODE4OC1mYTFjNzM4YzczOGMiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "SHIRHA",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

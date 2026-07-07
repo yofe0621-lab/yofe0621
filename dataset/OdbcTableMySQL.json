@@ -1,0 +1,16 @@
+{
+	"name": "OdbcTableMySQL",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OdbcMySQL",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "OdbcTable",
+		"schema": [],
+		"typeProperties": {
+			"tableName": "`datetimetest`"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

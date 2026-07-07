@@ -1,0 +1,17 @@
+{
+	"name": "SnowflakeLegacy",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"type": "Snowflake",
+		"typeProperties": {
+			"authenticationType": "Basic",
+			"connectionString": "jdbc:snowflake://test.snowflakecomputing.com/?user=test&db=test&warehouse=test&role=test",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJlZGZmNzIzZC0wYjM1LTRlMWYtODUyMS00MjJmMGY3YjU3ODciLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "SHIRyofe",
+			"type": "IntegrationRuntimeReference"
+		},
+		"annotations": []
+	}
+}

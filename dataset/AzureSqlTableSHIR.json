@@ -1,0 +1,22 @@
+{
+	"name": "AzureSqlTableSHIR",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabaseSHIR",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Col",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "StrSrc"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

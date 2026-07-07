@@ -1,0 +1,24 @@
+{
+	"name": "AzureSqlTableFaultTest",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "col",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "faulttest"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

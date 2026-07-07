@@ -1,0 +1,135 @@
+{
+	"name": "DataverseToSQLDemo_DW2",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEachEntity",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "GetFolderName",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('GetFolderName').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "DataverseToStaging",
+							"type": "ExecuteDataFlow",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataflow": {
+									"referenceName": "DataverseCDMToSQL_join_DW",
+									"type": "DataFlowReference",
+									"parameters": {
+										"folder": {
+											"value": "'@{pipeline().parameters.folder}'",
+											"type": "Expression"
+										},
+										"entity": {
+											"value": "'@{pipeline().parameters.entity}'",
+											"type": "Expression"
+										}
+									}
+								},
+								"staging": {
+									"linkedService": {
+										"referenceName": "AzureBlobStorage1",
+										"type": "LinkedServiceReference"
+									},
+									"folderPath": "test"
+								},
+								"compute": {
+									"coreCount": 8,
+									"computeType": "General"
+								},
+								"traceLevel": "Fine"
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "GetFolderName",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "DelimitedTextDataverse",
+						"type": "DatasetReference"
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"modifiedDatetimeStart": {
+							"value": "@adddays(utcNow(),-1)",
+							"type": "Expression"
+						},
+						"modifiedDatetimeEnd": {
+							"value": "@utcNow()",
+							"type": "Expression"
+						},
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"container": {
+				"type": "String",
+				"defaultValue": "dataverse-adache3-unq"
+			},
+			"folder": {
+				"type": "String",
+				"defaultValue": "2025-06-17T08.05.26Z"
+			},
+			"entity": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"dbschema": {
+				"type": "String",
+				"defaultValue": "dbo"
+			},
+			"prefix": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "DataverseToSQL"
+		},
+		"annotations": [],
+		"lastPublishTime": "2026-06-02T08:35:27Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

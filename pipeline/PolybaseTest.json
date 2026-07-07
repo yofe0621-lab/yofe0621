@@ -1,0 +1,958 @@
+{
+	"name": "PolybaseTest",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "ParquetReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlDWSink",
+						"writeBehavior": "Insert",
+						"sqlWriterUseTableLock": false,
+						"tableOption": "autoCreate",
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "CALENDAR_DATE",
+									"type": "DateTime",
+									"physicalType": "INT96"
+								},
+								"sink": {
+									"name": "CALENDAR_DATE",
+									"type": "DateTime",
+									"physicalType": "datetime2"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_CCYY_NBR",
+									"type": "Decimal",
+									"physicalType": "DECIMAL",
+									"scale": 18,
+									"precision": 38
+								},
+								"sink": {
+									"name": "CALENDAR_CCYY_NBR",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 18,
+									"precision": 38
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_CCYYMM_NBR",
+									"type": "Decimal",
+									"physicalType": "DECIMAL",
+									"scale": 18,
+									"precision": 38
+								},
+								"sink": {
+									"name": "CALENDAR_CCYYMM_NBR",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 18,
+									"precision": 38
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_CCYYQ_NBR",
+									"type": "Decimal",
+									"physicalType": "DECIMAL",
+									"scale": 18,
+									"precision": 38
+								},
+								"sink": {
+									"name": "CALENDAR_CCYYQ_NBR",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 18,
+									"precision": 38
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_DATE_DESC",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "CALENDAR_DATE_DESC",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_MTH_BEG_DATE",
+									"type": "DateTime",
+									"physicalType": "INT96"
+								},
+								"sink": {
+									"name": "CALENDAR_MTH_BEG_DATE",
+									"type": "DateTime",
+									"physicalType": "datetime2"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_MTH_DAY_DESC",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "CALENDAR_MTH_DAY_DESC",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_MTH_DESC",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "CALENDAR_MTH_DESC",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_MTH_END_DATE",
+									"type": "DateTime",
+									"physicalType": "INT96"
+								},
+								"sink": {
+									"name": "CALENDAR_MTH_END_DATE",
+									"type": "DateTime",
+									"physicalType": "datetime2"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_QTR_BEG_DATE",
+									"type": "DateTime",
+									"physicalType": "INT96"
+								},
+								"sink": {
+									"name": "CALENDAR_QTR_BEG_DATE",
+									"type": "DateTime",
+									"physicalType": "datetime2"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_QTR_DESC",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "CALENDAR_QTR_DESC",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_QTR_END_DATE",
+									"type": "DateTime",
+									"physicalType": "INT96"
+								},
+								"sink": {
+									"name": "CALENDAR_QTR_END_DATE",
+									"type": "DateTime",
+									"physicalType": "datetime2"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_WEEK_BEG_DATE",
+									"type": "DateTime",
+									"physicalType": "INT96"
+								},
+								"sink": {
+									"name": "CALENDAR_WEEK_BEG_DATE",
+									"type": "DateTime",
+									"physicalType": "datetime2"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_WEEK_DAY_DESC",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "CALENDAR_WEEK_DAY_DESC",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_WEEK_DESC",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "CALENDAR_WEEK_DESC",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_WEEK_END_DATE",
+									"type": "DateTime",
+									"physicalType": "INT96"
+								},
+								"sink": {
+									"name": "CALENDAR_WEEK_END_DATE",
+									"type": "DateTime",
+									"physicalType": "datetime2"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_WEEK_NBR",
+									"type": "Decimal",
+									"physicalType": "DECIMAL",
+									"scale": 18,
+									"precision": 38
+								},
+								"sink": {
+									"name": "CALENDAR_WEEK_NBR",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 18,
+									"precision": 38
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_WEEK_NBR_MON_SUN",
+									"type": "Decimal",
+									"physicalType": "DECIMAL",
+									"scale": 18,
+									"precision": 38
+								},
+								"sink": {
+									"name": "CALENDAR_WEEK_NBR_MON_SUN",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 18,
+									"precision": 38
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_YR_BEG_DATE",
+									"type": "DateTime",
+									"physicalType": "INT96"
+								},
+								"sink": {
+									"name": "CALENDAR_YR_BEG_DATE",
+									"type": "DateTime",
+									"physicalType": "datetime2"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_YR_END_DATE",
+									"type": "DateTime",
+									"physicalType": "INT96"
+								},
+								"sink": {
+									"name": "CALENDAR_YR_END_DATE",
+									"type": "DateTime",
+									"physicalType": "datetime2"
+								}
+							},
+							{
+								"source": {
+									"name": "COMPLETED_QTR_IND",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "COMPLETED_QTR_IND",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "COMPLETED_WEEK_IND",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "COMPLETED_WEEK_IND",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "COMPLETED_MTH_IND",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "COMPLETED_MTH_IND",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "COMPLETED_YR_IND",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "COMPLETED_YR_IND",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CURRENT_MTH_IND",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "CURRENT_MTH_IND",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CURRENT_QTR_IND",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "CURRENT_QTR_IND",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CURRENT_WEEK_IND",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "CURRENT_WEEK_IND",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CURRENT_YR_IND",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "CURRENT_YR_IND",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CURR_LAST_COMPLETED_MTH_IND",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "CURR_LAST_COMPLETED_MTH_IND",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CURR_LAST2_COMPLETED_MTH_IND",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "CURR_LAST2_COMPLETED_MTH_IND",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LAST_COMPLETED_12_MTH_IND",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "LAST_COMPLETED_12_MTH_IND",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LAST_COMPLETED_30_DAY_IND",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "LAST_COMPLETED_30_DAY_IND",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LAST_COMPLETED_DAY_IND",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "LAST_COMPLETED_DAY_IND",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LAST_COMPLETED_MTH_IND",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "LAST_COMPLETED_MTH_IND",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LAST_COMPLETED_QTR_IND",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "LAST_COMPLETED_QTR_IND",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LAST_COMPLETED_WEEK_IND",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "LAST_COMPLETED_WEEK_IND",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "LAST_COMPLETED_YR_IND",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "LAST_COMPLETED_YR_IND",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ParquetDateTest",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureSynapseAnalyticsTable1",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy data1_Legacy",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "ParquetReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlDWSink",
+						"allowCopyCommand": true,
+						"disableMetricsCollection": false
+					},
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "AzureBlobStorage1",
+							"type": "LinkedServiceReference"
+						},
+						"path": "test"
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "CALENDAR_DATE",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "CALENDAR_DATE",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_CCYY_NBR",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "CALENDAR_CCYY_NBR",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_CCYYMM_NBR",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "CALENDAR_CCYYMM_NBR",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_CCYYQ_NBR",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "CALENDAR_CCYYQ_NBR",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_DATE_DESC",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CALENDAR_DATE_DESC",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_MTH_BEG_DATE",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "CALENDAR_MTH_BEG_DATE",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_MTH_DAY_DESC",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CALENDAR_MTH_DAY_DESC",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_MTH_DESC",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CALENDAR_MTH_DESC",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_MTH_END_DATE",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "CALENDAR_MTH_END_DATE",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_QTR_BEG_DATE",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "CALENDAR_QTR_BEG_DATE",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_QTR_DESC",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CALENDAR_QTR_DESC",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_QTR_END_DATE",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "CALENDAR_QTR_END_DATE",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_WEEK_BEG_DATE",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "CALENDAR_WEEK_BEG_DATE",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_WEEK_DAY_DESC",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CALENDAR_WEEK_DAY_DESC",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_WEEK_DESC",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CALENDAR_WEEK_DESC",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_WEEK_END_DATE",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "CALENDAR_WEEK_END_DATE",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_WEEK_NBR",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "CALENDAR_WEEK_NBR",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_WEEK_NBR_MON_SUN",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "CALENDAR_WEEK_NBR_MON_SUN",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_YR_BEG_DATE",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "CALENDAR_YR_BEG_DATE",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "CALENDAR_YR_END_DATE",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "CALENDAR_YR_END_DATE",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "COMPLETED_QTR_IND",
+									"type": "String"
+								},
+								"sink": {
+									"name": "COMPLETED_QTR_IND",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "COMPLETED_WEEK_IND",
+									"type": "String"
+								},
+								"sink": {
+									"name": "COMPLETED_WEEK_IND",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "COMPLETED_MTH_IND",
+									"type": "String"
+								},
+								"sink": {
+									"name": "COMPLETED_MTH_IND",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "COMPLETED_YR_IND",
+									"type": "String"
+								},
+								"sink": {
+									"name": "COMPLETED_YR_IND",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CURRENT_MTH_IND",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CURRENT_MTH_IND",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CURRENT_QTR_IND",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CURRENT_QTR_IND",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CURRENT_WEEK_IND",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CURRENT_WEEK_IND",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CURRENT_YR_IND",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CURRENT_YR_IND",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CURR_LAST_COMPLETED_MTH_IND",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CURR_LAST_COMPLETED_MTH_IND",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CURR_LAST2_COMPLETED_MTH_IND",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CURR_LAST2_COMPLETED_MTH_IND",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LAST_COMPLETED_12_MTH_IND",
+									"type": "String"
+								},
+								"sink": {
+									"name": "LAST_COMPLETED_12_MTH_IND",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LAST_COMPLETED_30_DAY_IND",
+									"type": "String"
+								},
+								"sink": {
+									"name": "LAST_COMPLETED_30_DAY_IND",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LAST_COMPLETED_DAY_IND",
+									"type": "String"
+								},
+								"sink": {
+									"name": "LAST_COMPLETED_DAY_IND",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LAST_COMPLETED_MTH_IND",
+									"type": "String"
+								},
+								"sink": {
+									"name": "LAST_COMPLETED_MTH_IND",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LAST_COMPLETED_QTR_IND",
+									"type": "String"
+								},
+								"sink": {
+									"name": "LAST_COMPLETED_QTR_IND",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LAST_COMPLETED_WEEK_IND",
+									"type": "String"
+								},
+								"sink": {
+									"name": "LAST_COMPLETED_WEEK_IND",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LAST_COMPLETED_YR_IND",
+									"type": "String"
+								},
+								"sink": {
+									"name": "LAST_COMPLETED_YR_IND",
+									"type": "String"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ParquetDateTest",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureSynapseAnalyticsTableLegacy",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2024-09-18T05:44:38Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

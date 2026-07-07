@@ -1,0 +1,26 @@
+{
+	"name": "DecimalTestCtrl",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "tbl_name",
+				"type": "varchar"
+			},
+			{
+				"name": "col_name",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "decimalctrltbl"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

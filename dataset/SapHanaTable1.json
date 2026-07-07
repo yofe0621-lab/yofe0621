@@ -1,0 +1,17 @@
+{
+	"name": "SapHanaTable1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SapHana1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SapHanaTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "FOO",
+			"table": "SAMPLETABLEWith10M"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

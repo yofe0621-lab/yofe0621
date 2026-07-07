@@ -1,0 +1,16 @@
+{
+	"name": "InformixSrc",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "InformixLS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "InformixTable",
+		"schema": [],
+		"typeProperties": {
+			"tableName": "informix.uw_mres_log"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

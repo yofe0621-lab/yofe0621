@@ -1,0 +1,48 @@
+{
+	"name": "optionsetdest",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "EntityName",
+				"type": "varchar"
+			},
+			{
+				"name": "OptionSetName",
+				"type": "varchar"
+			},
+			{
+				"name": "Option",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "IsUserLocalizedLabel",
+				"type": "bit"
+			},
+			{
+				"name": "LocalizedLabelLanguageCode",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "LocalizedLabel",
+				"type": "varchar"
+			},
+			{
+				"name": "GlobalOptionSetName",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "optionsetmetadata"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

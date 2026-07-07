@@ -1,0 +1,105 @@
+{
+	"name": "optionsetdf",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "optionsetsrc",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "optionsetdest",
+						"type": "DatasetReference"
+					},
+					"name": "ExistingData"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "optionsetdest",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "join1"
+				},
+				{
+					"name": "filter1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Column_1 as string,",
+				"          Column_2 as string,",
+				"          Column_3 as string,",
+				"          Column_4 as string,",
+				"          Column_5 as string,",
+				"          Column_6 as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source(output(",
+				"          EntityName as string,",
+				"          OptionSetName as string,",
+				"          Option as string,",
+				"          IsUserLocalizedLabel as string,",
+				"          LocalizedLabelLanguageCode as string,",
+				"          LocalizedLabel as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     query: 'select\\nEntityName,\\nOptionSetName,\\nconvert(varchar(2),[Option]) as [Option],\\nCASE WHEN IsUserLocalizedLabel = 1 THEN \\'True\\' ELSE \\'False\\' END AS IsUserLocalizedLabel,\\nconvert(varchar(5),LocalizedLabelLanguageCode) as LocalizedLabelLanguageCode,\\nLocalizedLabel\\nfrom optionsetmetadata ',",
+				"     format: 'query') ~> ExistingData",
+				"source1, ExistingData join(Column_1 == EntityName",
+				"     && Column_2 == OptionSetName",
+				"     && Column_3 == Option",
+				"     && Column_4 == IsUserLocalizedLabel",
+				"     && Column_5 == LocalizedLabelLanguageCode",
+				"     && Column_6 == LocalizedLabel,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 filter(isNull(Option)) ~> filter1",
+				"filter1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          EntityName as string,",
+				"          OptionSetName as string,",
+				"          Option as integer,",
+				"          IsUserLocalizedLabel as boolean,",
+				"          LocalizedLabelLanguageCode as integer,",
+				"          LocalizedLabel as string,",
+				"          GlobalOptionSetName as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          EntityName = Column_1,",
+				"          OptionSetName = Column_2,",
+				"          Option = Column_3,",
+				"          IsUserLocalizedLabel = Column_4,",
+				"          LocalizedLabelLanguageCode = Column_5,",
+				"          LocalizedLabel = Column_6",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}

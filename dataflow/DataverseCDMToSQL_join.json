@@ -1,0 +1,234 @@
+{
+	"name": "DataverseCDMToSQL_join",
+	"properties": {
+		"description": "Data flow which reads CDM entity, transforms the data and move the data to destination SQL DB",
+		"folder": {
+			"name": "DataverseToSQL"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "AzureDataLakeStorage1",
+						"type": "LinkedServiceReference"
+					},
+					"name": "CDMEntity"
+				},
+				{
+					"linkedService": {
+						"referenceName": "AzureSqlDatabase2",
+						"type": "LinkedServiceReference"
+					},
+					"name": "TargetSQLExisting"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "AzureSqlDatabase2",
+						"type": "LinkedServiceReference"
+					},
+					"name": "AzureSQLDB"
+				},
+				{
+					"linkedService": {
+						"referenceName": "AzureSqlDatabase2",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "IdentifyColumns"
+				},
+				{
+					"name": "AlterRow"
+				},
+				{
+					"name": "Rank"
+				},
+				{
+					"name": "Dedup"
+				},
+				{
+					"name": "UpdateInsertIdentify"
+				},
+				{
+					"name": "FilterDeletedRows"
+				},
+				{
+					"name": "AddEntityName"
+				},
+				{
+					"name": "SelectDeleteLogColumns"
+				},
+				{
+					"name": "fortest"
+				},
+				{
+					"name": "FilterOutNoUpdate"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     folder as string,",
+				"     entity as string",
+				"}",
+				"source(output(",
+				"          Id as string,",
+				"          SinkCreatedOn as timestamp,",
+				"          SinkModifiedOn as timestamp,",
+				"          priceincludesalestax as long,",
+				"          ispublicsector_it as long,",
+				"          sysdatastatecode as long,",
+				"          bankcustpaymidtable as long,",
+				"          clearingperiod as string,",
+				"          custgroup as string,",
+				"          defaultdimension as long,",
+				"          name as string,",
+				"          paymtermid as string,",
+				"          taxgroupid as string,",
+				"          taxperiodpaymentcode_pl as string,",
+				"          custwriteoffrefrecid as long,",
+				"          custaccountnumseq as long,",
+				"          accountingcurrencyexchangeratetype as long,",
+				"          reportingcurrencyexchangeratetype as long,",
+				"          modifieddatetime as timestamp,",
+				"          modifiedby as string,",
+				"          modifiedtransactionid as long,",
+				"          createddatetime as timestamp,",
+				"          createdby as string,",
+				"          createdtransactionid as long,",
+				"          dataareaid as string,",
+				"          recversion as long,",
+				"          partition as long,",
+				"          sysrowversion as long,",
+				"          recid as long,",
+				"          tableid as long,",
+				"          versionnumber as long,",
+				"          createdon as string,",
+				"          modifiedon as timestamp,",
+				"          IsDelete as boolean",
+				"     ),",
+				"     useSchema: false,",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: true,",
+				"     entity: ($entity),",
+				"     format: 'cdm',",
+				"     manifestType: 'model',",
+				"     folderPath: ($folder),",
+				"     fileSystem: 'dataverse-adache3-unq',",
+				"     timestampFormats: ['MM/dd/yyyy hh:mm:ss a','MM-dd-yyyy hh:mm:ss a','yyyy.MM.dd hh:mm:ss a','yyyy-MM-dd\\'T\\'HH:mm:ss\\'Z\\'','yyyy-MM-dd\\'T\\'HH:mm:ss.SSS\\'Z\\'','yyyy-MM-dd\\'T\\'HH:mm:ss']) ~> CDMEntity",
+				"source(output(",
+				"          Id as string,",
+				"          SinkCreatedOn as timestamp,",
+				"          SinkModifiedOn as timestamp,",
+				"          priceincludesalestax as long,",
+				"          ispublicsector_it as long,",
+				"          sysdatastatecode as long,",
+				"          bankcustpaymidtable as long,",
+				"          clearingperiod as string,",
+				"          custgroup as string,",
+				"          defaultdimension as long,",
+				"          name as string,",
+				"          paymtermid as string,",
+				"          taxgroupid as string,",
+				"          taxperiodpaymentcode_pl as string,",
+				"          custwriteoffrefrecid as long,",
+				"          custaccountnumseq as long,",
+				"          accountingcurrencyexchangeratetype as long,",
+				"          reportingcurrencyexchangeratetype as long,",
+				"          modifieddatetime as timestamp,",
+				"          modifiedby as string,",
+				"          modifiedtransactionid as long,",
+				"          createddatetime as timestamp,",
+				"          createdby as string,",
+				"          createdtransactionid as long,",
+				"          dataareaid as string,",
+				"          recversion as long,",
+				"          partition as long,",
+				"          sysrowversion as long,",
+				"          recid as long,",
+				"          tableid as long,",
+				"          versionnumber as long,",
+				"          createdon as string,",
+				"          modifiedon as timestamp,",
+				"          IsDelete as boolean",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'dbo',",
+				"     tableName: 'custgroup',",
+				"     isolationLevel: 'READ_UNCOMMITTED') ~> TargetSQLExisting",
+				"CDMEntity derive(Id = toString(byName(\"Id\")),",
+				"          versionnumber = toLong(byName(\"versionnumber\")),",
+				"          IsDelete = toBoolean(byName(\"IsDelete\"))) ~> IdentifyColumns",
+				"FilterOutNoUpdate alterRow(updateIf(isNull(!isNull(TargetSQLExisting@Id)&&IdentifyColumns@versionnumber>TargetSQLExisting@versionnumber&&IdentifyColumns@IsDelete!=true())),",
+				"     deleteIf(IdentifyColumns@IsDelete==true()),",
+				"     insertIf(isNull(TargetSQLExisting@recid))) ~> AlterRow",
+				"IdentifyColumns window(over(Id),",
+				"     desc(Id, false),",
+				"     desc(versionnumber, false),",
+				"     desc(SinkModifiedOn, false),",
+				"     {_RowVersion} = denseRank()) ~> Rank",
+				"Rank filter(toLong(byName(\"_RowVersion\"))==1) ~> Dedup",
+				"Dedup, TargetSQLExisting join(fuzzyCompare(IdentifyColumns@Id, TargetSQLExisting@Id, 80.00),",
+				"     joinType:'left',",
+				"     matchType:'fuzzy',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'off')~> UpdateInsertIdentify",
+				"UpdateInsertIdentify filter(IdentifyColumns@IsDelete==true()) ~> FilterDeletedRows",
+				"FilterDeletedRows derive(EntityName = \"generaljournalentry\") ~> AddEntityName",
+				"AddEntityName select(mapColumn(",
+				"          EntityName,",
+				"          RecordId = IdentifyColumns@Id,",
+				"          SinkDeleteTime = CDMEntity@SinkModifiedOn,",
+				"          VersionNumber = IdentifyColumns@versionnumber",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: true) ~> SelectDeleteLogColumns",
+				"UpdateInsertIdentify derive(insert = isNull(isNull(TargetSQLExisting@Id) && IdentifyColumns@IsDelete!=true()),",
+				"          update = isNull(!isNull(TargetSQLExisting@Id) && IdentifyColumns@versionnumber>TargetSQLExisting@versionnumber && IdentifyColumns@IsDelete!=true())) ~> fortest",
+				"fortest filter(!isNull(!isNull(TargetSQLExisting@Id) && IdentifyColumns@versionnumber<TargetSQLExisting@versionnumber && IdentifyColumns@IsDelete!=true())) ~> FilterOutNoUpdate",
+				"AlterRow sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'dbo',",
+				"     tableName: 'custgroup',",
+				"     insertable: true,",
+				"     updateable: true,",
+				"     deletable: true,",
+				"     upsertable: false,",
+				"     keys:['Id'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          each(match(/* All input columns */true()),",
+				"               /* Input name */$$ = $$)",
+				"     )) ~> AzureSQLDB",
+				"SelectDeleteLogColumns sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'dbo',",
+				"     tableName: 'DeleteLog',",
+				"     insertable: true,",
+				"     updateable: false,",
+				"     deletable: false,",
+				"     upsertable: false,",
+				"     recreate: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+			]
+		}
+	}
+}

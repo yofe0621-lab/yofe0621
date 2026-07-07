@@ -1,0 +1,149 @@
+{
+	"name": "InformixDest",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "Informix.csv",
+				"fileSystem": "test"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Prop_0",
+				"type": "String"
+			},
+			{
+				"name": "Issuer",
+				"type": "String"
+			},
+			{
+				"name": "ISIN",
+				"type": "String"
+			},
+			{
+				"name": "Book Port",
+				"type": "String"
+			},
+			{
+				"name": "HK PAR FUND ID",
+				"type": "String"
+			},
+			{
+				"name": "Mapping identifier",
+				"type": "String"
+			},
+			{
+				"name": "Pos (Disp)",
+				"type": "String"
+			},
+			{
+				"name": "Mkt Val",
+				"type": "String"
+			},
+			{
+				"name": "MAPPED CSA BY ISIN V2",
+				"type": "String"
+			},
+			{
+				"name": "MAPPED CSA HC V2",
+				"type": "String"
+			},
+			{
+				"name": "Years to Mat",
+				"type": "String"
+			},
+			{
+				"name": "Amt Out",
+				"type": "String"
+			},
+			{
+				"name": "Cntry (Risk)",
+				"type": "String"
+			},
+			{
+				"name": "Rank",
+				"type": "String"
+			},
+			{
+				"name": "Moody's",
+				"type": "String"
+			},
+			{
+				"name": "S&P",
+				"type": "String"
+			},
+			{
+				"name": "BCLASS4",
+				"type": "String"
+			},
+			{
+				"name": "CSA Min Rating Cat",
+				"type": "String"
+			},
+			{
+				"name": "CSA HC JPM V2",
+				"type": "String"
+			},
+			{
+				"name": "CSA HC GS V2",
+				"type": "String"
+			},
+			{
+				"name": "CSA HC HSBC V2",
+				"type": "String"
+			},
+			{
+				"name": "CSA HC SCB",
+				"type": "String"
+			},
+			{
+				"name": "CSA HC BOA V2",
+				"type": "String"
+			},
+			{
+				"name": "CSA HC CITI",
+				"type": "String"
+			},
+			{
+				"name": "CSA HC MS V2",
+				"type": "String"
+			},
+			{
+				"name": "CSA HC BNP",
+				"type": "String"
+			},
+			{
+				"name": "CSA HC SOCGEN",
+				"type": "String"
+			},
+			{
+				"name": "CSA HC CACIB",
+				"type": "String"
+			},
+			{
+				"name": "CSA HC DB V2",
+				"type": "String"
+			},
+			{
+				"name": "CSA HC Barc V2",
+				"type": "String"
+			},
+			{
+				"name": "COLL ACTION TYPE",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,21 @@
+{
+	"name": "AzureSqlDatabaseSHIR",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"server": "sqlyofe.database.windows.net",
+			"database": "yofetest",
+			"encrypt": "optional",
+			"trustServerCertificate": false,
+			"authenticationType": "SQL",
+			"userName": "yofe",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI5ODVhNjQ1Ni02NGI3LTQyYmItOTc3OS1jMDcyMmZjMTE4MDEiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "SHIRHA",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

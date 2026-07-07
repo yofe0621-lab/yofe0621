@@ -1,0 +1,200 @@
+{
+	"name": "DataverseToSQLDemo",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEachEntity",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "LookupModelJson",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('LookupModelJson').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "DataverseToSQL",
+							"type": "ExecuteDataFlow",
+							"dependsOn": [
+								{
+									"activity": "GetPrefolder",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataflow": {
+									"referenceName": "DataverseCDMToSQL_doubleinterval",
+									"type": "DataFlowReference",
+									"parameters": {
+										"dbschema": {
+											"value": "'@{variables('dbschema')}'",
+											"type": "Expression"
+										},
+										"prefix": {
+											"value": "'@{variables('prefix')}'",
+											"type": "Expression"
+										},
+										"entity": {
+											"value": "'@{item().Entity}'",
+											"type": "Expression"
+										},
+										"prefolder": {
+											"value": "'@{activity('GetPrefolder').output.firstRow.prefolder}'",
+											"type": "Expression"
+										},
+										"container": {
+											"value": "'@{pipeline().parameters.container}'",
+											"type": "Expression"
+										},
+										"folder": {
+											"value": "'@{pipeline().parameters.folder}'",
+											"type": "Expression"
+										}
+									}
+								},
+								"compute": {
+									"coreCount": 8,
+									"computeType": "General"
+								},
+								"traceLevel": "Fine"
+							}
+						},
+						{
+							"name": "UpdateMaxversion",
+							"type": "Script",
+							"dependsOn": [
+								{
+									"activity": "DataverseToSQL",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"linkedServiceName": {
+								"referenceName": "AzureSqlDatabase2",
+								"type": "LinkedServiceReference"
+							},
+							"typeProperties": {
+								"scripts": [
+									{
+										"type": "NonQuery",
+										"text": {
+											"value": "DECLARE @schemaName NVARCHAR(20) = '@{variables('dbschema')}';\nDECLARE @tablePrefix NVARCHAR(148) = '@{variables('prefix')}';\nDECLARE @container NVARCHAR(70) = '@{pipeline().parameters.container}';\nDECLARE @folder NVARCHAR(70) = '@{pipeline().parameters.folder}';\nDECLARE @runid NVARCHAR(40) = '@{pipeline().RunId}';\nDECLARE @entity NVARCHAR(200) = '@{item().Entity}';\n\nDECLARE @UpdateVersionLog NVARCHAR(MAX) =\n'UPDATE '+ @schemaName + '.' + @tablePrefix + 'DataverseToSQLVerionLog\nSET\nPipelineRunId = ''' + @runid + ''', prefolder = ''' + @folder + ''', premaxversion = maxversion, maxversion = (SELECT MAX(versionnumber) FROM ' + @schemaName + '.' + @tablePrefix + @entity + ') \nWHERE Entity = '+ '''' + @entity + ''''\n;\nEXECUTE sp_executesql @UpdateVersionLog;",
+											"type": "Expression"
+										}
+									}
+								],
+								"scriptBlockExecutionTimeout": "02:00:00"
+							}
+						},
+						{
+							"name": "GetPrefolder",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@concat('SELECT prefolder FROM ', variables('dbschema'),'.' ,variables('prefix'),'DataverseToSQLVerionLog WHERE Entity = ''' ,item().Entity,'''')",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "DataverseToSQLPrefolder",
+									"type": "DatasetReference"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "LookupModelJson",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "select Entity from DataverseToSQLVerionLog",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "DataverseToSQLPrefolder",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			}
+		],
+		"parameters": {
+			"container": {
+				"type": "String",
+				"defaultValue": "dataverse-adache3-unq"
+			},
+			"folder": {
+				"type": "String",
+				"defaultValue": "2025-06-17T08.05.26Z"
+			}
+		},
+		"variables": {
+			"dbschema": {
+				"type": "String",
+				"defaultValue": "dbo"
+			},
+			"prefix": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "DataverseToSQL"
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-07-16T06:03:07Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,88 @@
+{
+	"name": "DataverseToSQLDemo_join",
+	"properties": {
+		"activities": [
+			{
+				"name": "Data flow1",
+				"type": "ExecuteDataFlow",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "DataverseCDMToSQL_join",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "GetFolderName",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "DelimitedTextDataverse",
+						"type": "DatasetReference"
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"container": {
+				"type": "String",
+				"defaultValue": "dataverse-adache3-unq"
+			},
+			"folder": {
+				"type": "String",
+				"defaultValue": "2025-06-17T08.05.26Z"
+			}
+		},
+		"variables": {
+			"dbschema": {
+				"type": "String",
+				"defaultValue": "dbo"
+			},
+			"prefix": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "DataverseToSQL"
+		},
+		"annotations": [],
+		"lastPublishTime": "2026-06-02T07:55:51Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

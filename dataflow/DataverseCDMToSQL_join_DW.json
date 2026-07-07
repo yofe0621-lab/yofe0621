@@ -1,0 +1,103 @@
+{
+	"name": "DataverseCDMToSQL_join_DW",
+	"properties": {
+		"description": "Data flow which reads CDM entity, transforms the data and move the data to destination SQL DB",
+		"folder": {
+			"name": "DataverseToSQL"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "AzureDataLakeStorage1",
+						"type": "LinkedServiceReference"
+					},
+					"name": "CDMEntity"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "Warehouse1",
+						"type": "LinkedServiceReference"
+					},
+					"name": "Staging"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"parameters{",
+				"     folder as string,",
+				"     entity as string",
+				"}",
+				"source(output(",
+				"          Id as string,",
+				"          SinkCreatedOn as timestamp,",
+				"          SinkModifiedOn as timestamp,",
+				"          priceincludesalestax as long,",
+				"          ispublicsector_it as long,",
+				"          sysdatastatecode as long,",
+				"          bankcustpaymidtable as long,",
+				"          clearingperiod as string,",
+				"          custgroup as string,",
+				"          defaultdimension as long,",
+				"          name as string,",
+				"          paymtermid as string,",
+				"          taxgroupid as string,",
+				"          taxperiodpaymentcode_pl as string,",
+				"          custwriteoffrefrecid as long,",
+				"          custaccountnumseq as long,",
+				"          accountingcurrencyexchangeratetype as long,",
+				"          reportingcurrencyexchangeratetype as long,",
+				"          modifieddatetime as timestamp,",
+				"          modifiedby as string,",
+				"          modifiedtransactionid as long,",
+				"          createddatetime as timestamp,",
+				"          createdby as string,",
+				"          createdtransactionid as long,",
+				"          dataareaid as string,",
+				"          recversion as long,",
+				"          partition as long,",
+				"          sysrowversion as long,",
+				"          recid as long,",
+				"          tableid as long,",
+				"          versionnumber as long,",
+				"          createdon as string,",
+				"          modifiedon as timestamp,",
+				"          IsDelete as boolean",
+				"     ),",
+				"     useSchema: false,",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: true,",
+				"     entity: ($entity),",
+				"     format: 'cdm',",
+				"     manifestType: 'model',",
+				"     folderPath: ($folder),",
+				"     fileSystem: 'dataverse-adache3-unq',",
+				"     timestampFormats: ['MM/dd/yyyy hh:mm:ss a','MM-dd-yyyy hh:mm:ss a','yyyy.MM.dd hh:mm:ss a','yyyy-MM-dd\\'T\\'HH:mm:ss\\'Z\\'','yyyy-MM-dd\\'T\\'HH:mm:ss.SSS\\'Z\\'','yyyy-MM-dd\\'T\\'HH:mm:ss']) ~> CDMEntity",
+				"CDMEntity sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'fabricdw',",
+				"     schemaName: '',",
+				"     tableName: '',",
+				"     insertable: true,",
+				"     updateable: false,",
+				"     deletable: false,",
+				"     upsertable: false,",
+				"     allowCopyCommand: true,",
+				"     staged: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          each(match(/* All input columns */true()),",
+				"               /* Input name */$$ = $$)",
+				"     )) ~> Staging"
+			]
+		}
+	}
+}

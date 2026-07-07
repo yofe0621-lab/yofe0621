@@ -1,0 +1,37 @@
+{
+	"name": "CallFabricPipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "Web1",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"headers": {
+						"Authorization": "Bearer "
+					},
+					"url": "https://api.fabric.microsoft.com/v1/workspaces/b81656f4-2111-4c56-92c8-6de555def1b4/items/c85ded31-59fb-4156-93c5-48cb8af3628e/jobs/instances?jobType=Pipeline",
+					"body": {
+						"executionData": {
+							"pipelineName": "NotebookTest2",
+							"OwnerUserPrincipalName": "yofe@microsoft.com",
+							"OwnerUserObjectId": "817c6aa5-f68e-49ae-b2f5-72e7b1e2333c"
+						}
+					}
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2025-11-07T05:06:45Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

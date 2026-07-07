@@ -1,0 +1,101 @@
+{
+	"name": "DataverseToSQLDemo_DW1",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEachEntity",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "LookupModelJson",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('LookupModelJson').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Execute Pipeline1",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "DataverseToSQLDemo_DW2",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"entity": {
+										"value": "@item().Entity",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "LookupModelJson",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "select Entity from DataverseToSQLVerionLog",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "DataverseToSQLPrefolder",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			}
+		],
+		"parameters": {
+			"container": {
+				"type": "String",
+				"defaultValue": "dataverse-adache3-unq"
+			},
+			"folder": {
+				"type": "String",
+				"defaultValue": "2025-06-17T08.05.26Z"
+			}
+		},
+		"variables": {
+			"dbschema": {
+				"type": "String",
+				"defaultValue": "dbo"
+			},
+			"prefix": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "DataverseToSQL"
+		},
+		"annotations": [],
+		"lastPublishTime": "2026-06-02T07:55:51Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

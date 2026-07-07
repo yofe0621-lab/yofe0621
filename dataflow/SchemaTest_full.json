@@ -1,0 +1,91 @@
+{
+	"name": "SchemaTest_full",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SchemaStagingADLS",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "AzureDataLakeStorageDeltaLake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          ID as string,",
+				"          CALENDAR_DATE as string,",
+				"          CALENDAR_CCYY_NBR as string,",
+				"          CALENDAR_CCYYMM_NBR as string,",
+				"          CALENDAR_CCYYQ_NBR as string,",
+				"          CALENDAR_DATE_DESC as string,",
+				"          CALENDAR_MTH_BEG_DATE as string,",
+				"          CALENDAR_MTH_DAY_DESC as string,",
+				"          CALENDAR_MTH_DESC as string,",
+				"          CALENDAR_MTH_END_DATE as string,",
+				"          CALENDAR_QTR_BEG_DATE as string,",
+				"          CALENDAR_QTR_DESC as string,",
+				"          CALENDAR_QTR_END_DATE as string,",
+				"          CALENDAR_WEEK_BEG_DATE as string,",
+				"          CALENDAR_WEEK_DAY_DESC as string,",
+				"          CALENDAR_WEEK_DESC as string,",
+				"          CALENDAR_WEEK_END_DATE as string,",
+				"          CALENDAR_WEEK_NBR as string,",
+				"          CALENDAR_WEEK_NBR_MON_SUN as string,",
+				"          CALENDAR_YR_BEG_DATE as string,",
+				"          CALENDAR_YR_END_DATE as string,",
+				"          COMPLETED_QTR_IND as string,",
+				"          COMPLETED_WEEK_IND as string,",
+				"          COMPLETED_MTH_IND as string,",
+				"          COMPLETED_YR_IND as string,",
+				"          CURRENT_MTH_IND as string,",
+				"          CURRENT_QTR_IND as string,",
+				"          CURRENT_WEEK_IND as string,",
+				"          CURRENT_YR_IND as string,",
+				"          CURR_LAST_COMPLETED_MTH_IND as string,",
+				"          CURR_LAST2_COMPLETED_MTH_IND as string,",
+				"          LAST_COMPLETED_12_MTH_IND as string,",
+				"          LAST_COMPLETED_30_DAY_IND as string,",
+				"          LAST_COMPLETED_DAY_IND as string,",
+				"          LAST_COMPLETED_MTH_IND as string,",
+				"          LAST_COMPLETED_QTR_IND as string,",
+				"          LAST_COMPLETED_WEEK_IND as string,",
+				"          LAST_COMPLETED_YR_IND as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'test',",
+				"     folderPath: 'synapsedelta',",
+				"     mergeSchema: false,",
+				"     autoCompact: false,",
+				"     optimizedWrite: false,",
+				"     vacuum: 0,",
+				"     deletable: false,",
+				"     insertable: true,",
+				"     updateable: false,",
+				"     upsertable: false,",
+				"     keys:['ID'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
+			]
+		}
+	}
+}

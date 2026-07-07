@@ -1,0 +1,15 @@
+{
+	"name": "MySQLTableLegacy",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "MySqlLegacy",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "MySqlTable",
+		"typeProperties": {
+			"tableName": "datetimetest"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

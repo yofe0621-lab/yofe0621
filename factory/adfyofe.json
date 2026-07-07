@@ -1,0 +1,21 @@
+{
+	"name": "adfyofe",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Enabled",
+			"editable": true
+		}
+	},
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned,UserAssigned",
+		"principalId": "0149b1f5-2da3-4fb8-858d-6621df3d442a",
+		"tenantId": "16b3c013-d300-468d-ac64-7eda0820b6d3",
+		"userAssignedIdentities": {
+			"/subscriptions/26c1fddb-1b8b-4755-a146-a7f8bfe73f39/resourcegroups/yoferg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/yofeusermi": {
+				"clientId": "77ca7910-206e-4978-9df7-459e221bbbec",
+				"principalId": "df5a1121-b1fd-4840-94c1-30c5dd84df62"
+			}
+		}
+	}
+}

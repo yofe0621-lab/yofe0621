@@ -1,0 +1,26 @@
+{
+	"name": "AzureSqlTableControlTbl",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "hostname",
+				"type": "nvarchar"
+			},
+			{
+				"name": "dbname",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "ControlTbl"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

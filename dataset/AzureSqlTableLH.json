@@ -1,0 +1,43 @@
+{
+	"name": "AzureSqlTableLH",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabaseLH",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "countryOrRegion",
+				"type": "varchar"
+			},
+			{
+				"name": "holidayName",
+				"type": "varchar"
+			},
+			{
+				"name": "normalizeHolidayName",
+				"type": "varchar"
+			},
+			{
+				"name": "isPaidTimeOff",
+				"type": "bit"
+			},
+			{
+				"name": "countryRegionCode",
+				"type": "varchar"
+			},
+			{
+				"name": "date",
+				"type": "datetime2",
+				"scale": 6
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "publicholidays"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

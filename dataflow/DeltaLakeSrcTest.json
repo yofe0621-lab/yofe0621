@@ -1,0 +1,66 @@
+{
+	"name": "DeltaLakeSrcTest",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "AzureDataLakeStorageDeltaLake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "source2"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTableLH",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          ORG_ID as string,",
+				"          AUTHORITY_ID as string,",
+				"          ORG_PRIMARY_ID as string,",
+				"          PROVIDER_CODE as string,",
+				"          DATE_CREATED as timestamp,",
+				"          UNMAPPED_FLAG as string,",
+				"          UNMAPPED_DATE as timestamp,",
+				"          CREATED_BY as string,",
+				"          SYSTEM_ADM_STS_PERM_ID as string,",
+				"          SYSTEM_ADM_STS_REASON_PERM_ID as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet',",
+				"     fileSystem: 'test',",
+				"     folderPath: 'Lucas_DeltaLake_Test',",
+				"     fileName: 'part-00000-a576ad81-90b8-4f90-a566-e75cefe56294-c000.snappy.parquet') ~> source2",
+				"source2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          countryOrRegion as string,",
+				"          holidayName as string,",
+				"          normalizeHolidayName as string,",
+				"          isPaidTimeOff as boolean,",
+				"          countryRegionCode as string,",
+				"          date as timestamp",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+			]
+		}
+	}
+}

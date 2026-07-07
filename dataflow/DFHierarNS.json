@@ -1,0 +1,71 @@
+{
+	"name": "DFHierarNS",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "BoolTestSrc",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "JsonHierarNS",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          {_c0} as string,",
+				"          Issuer as string,",
+				"          ISIN as string,",
+				"          {Book Port} as string,",
+				"          {HK PAR FUND ID} as boolean,",
+				"          {Mapping identifier} as string,",
+				"          {Pos (Disp)} as double,",
+				"          {Mkt Val} as integer,",
+				"          {MAPPED CSA BY ISIN V2} as string,",
+				"          {MAPPED CSA HC V2} as boolean,",
+				"          {Years to Mat} as boolean,",
+				"          {Amt Out} as string,",
+				"          {Cntry (Risk)} as string,",
+				"          Rank as string,",
+				"          {Moody's} as string,",
+				"          {S&P} as string,",
+				"          BCLASS4 as string,",
+				"          {CSA Min Rating Cat} as short,",
+				"          {CSA HC JPM V2} as boolean,",
+				"          {CSA HC GS V2} as boolean,",
+				"          {CSA HC HSBC V2} as boolean,",
+				"          {CSA HC SCB} as boolean,",
+				"          {CSA HC BOA V2} as boolean,",
+				"          {CSA HC CITI} as boolean,",
+				"          {CSA HC MS V2} as boolean,",
+				"          {CSA HC BNP} as boolean,",
+				"          {CSA HC SOCGEN} as boolean,",
+				"          {CSA HC CACIB} as boolean,",
+				"          {CSA HC DB V2} as boolean,",
+				"          {CSA HC Barc V2} as boolean,",
+				"          {COLL ACTION TYPE} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     rowUrlColumn:'Book Port',",
+				"     truncate: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
+			]
+		}
+	}
+}

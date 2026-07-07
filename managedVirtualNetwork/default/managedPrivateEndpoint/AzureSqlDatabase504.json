@@ -1,0 +1,10 @@
+{
+	"name": "AzureSqlDatabase504",
+	"properties": {
+		"privateLinkResourceId": "/subscriptions/26c1fddb-1b8b-4755-a146-a7f8bfe73f39/resourceGroups/yoferg/providers/Microsoft.Sql/servers/sqlyofe",
+		"groupId": "sqlServer",
+		"fqdns": [
+			"sqlyofe.database.windows.net"
+		]
+	}
+}

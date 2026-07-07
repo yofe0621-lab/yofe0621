@@ -1,0 +1,27 @@
+{
+	"name": "AzureSynapseAnalyticsTableFaultTest",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSynapseAnalyticsFault",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "data",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "datalengthshort"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

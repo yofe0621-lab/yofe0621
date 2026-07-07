@@ -1,0 +1,23 @@
+{
+	"name": "MySql1",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "MySql",
+		"typeProperties": {
+			"server": "127.0.0.1",
+			"port": 3306,
+			"database": "test",
+			"username": "root",
+			"sslMode": 1,
+			"useSystemTrustStore": 0,
+			"driverVersion": "v2",
+			"allowZeroDatetime": true,
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJiODU4ZDYxMy1kZDdlLTQ2MzYtOTI5Ny1jMmEyNDE2ODQ4MGIiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "SHIRHA",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

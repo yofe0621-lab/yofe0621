@@ -1,0 +1,70 @@
+{
+	"name": "Databricks",
+	"properties": {
+		"activities": [
+			{
+				"name": "Job1",
+				"type": "DatabricksJob",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"jobId": "151353048366659",
+					"jobParameters": {
+						"entity_name": {
+							"value": "@pipeline().parameters.param",
+							"type": "Expression"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks1",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Notebook1",
+				"type": "DatabricksNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/yofe@microsoft.com/TestNotebook"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks1",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"parameters": {
+			"param": {
+				"type": "string",
+				"defaultValue": "test_test"
+			}
+		},
+		"variables": {
+			"var": {
+				"type": "String",
+				"defaultValue": "test"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2026-04-09T07:29:35Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

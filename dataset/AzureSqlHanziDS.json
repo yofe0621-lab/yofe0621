@@ -1,0 +1,22 @@
+{
+	"name": "AzureSqlHanziDS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "hanzi",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "hanzitest"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

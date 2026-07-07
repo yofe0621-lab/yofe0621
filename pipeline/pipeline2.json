@@ -3,20 +3,27 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Wait1",
-				"type": "Wait",
+				"name": "Execute Pipeline1",
+				"type": "ExecutePipeline",
 				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
 				"userProperties": [],
 				"typeProperties": {
-					"waitTimeInSeconds": 1
+					"pipeline": {
+						"referenceName": "pipeline3",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
 				}
 			}
 		],
 		"folder": {
-			"name": "test"
+			"name": "ParentChild"
 		},
 		"annotations": [],
-		"lastPublishTime": "2025-04-29T02:36:34Z"
+		"lastPublishTime": "2026-04-09T07:13:43Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

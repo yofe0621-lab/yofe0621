@@ -1,0 +1,94 @@
+{
+	"name": "SPOTest",
+	"properties": {
+		"activities": [
+			{
+				"name": "Web1",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "GET",
+					"url": "https://graph.microsoft.com/v1.0/sites/7dd1d6b6-c1b8-4fec-b91e-45801e628c44/drives/b!ttbRfbjB7E-5HkWAHmKMRAWkQv-ry8RNmQvUEwkYG8dJwSrRFUDBRZOvrXCPkuNS/root:/test1/Language%20Verification.xlsx",
+					"authentication": {
+						"type": "ServicePrincipal",
+						"userTenant": "4998146e-7fc7-404d-a42a-a658d9e6df62",
+						"username": "8dca95b2-6260-4ff9-96ce-b9462d89c94c",
+						"resource": "https://graph.microsoft.com/",
+						"password": {
+							"type": "SecureString",
+							"value": "**********"
+						}
+					}
+				}
+			},
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Web1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "HttpReadSettings",
+							"requestMethod": "GET"
+						},
+						"formatSettings": {
+							"type": "BinaryReadSettings"
+						}
+					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "BinarySPO",
+						"type": "DatasetReference",
+						"parameters": {
+							"downloadUrl": {
+								"value": "@activity('Web1').output['@microsoft.graph.downloadUrl']",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Binaryadls",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2025-07-24T00:22:37Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

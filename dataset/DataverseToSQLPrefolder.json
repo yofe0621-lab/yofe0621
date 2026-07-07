@@ -1,0 +1,40 @@
+{
+	"name": "DataverseToSQLPrefolder",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Entity",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PipelineRunId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "prefolder",
+				"type": "nvarchar"
+			},
+			{
+				"name": "maxversion",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "premaxversion",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "DataverseToSQLVerionLog"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
