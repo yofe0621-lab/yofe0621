@@ -1,0 +1,4824 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adfyofe"
+		},
+		"AzureBatch1_accessKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessKey' of 'AzureBatch1'"
+		},
+		"AzureSqlDatabaseSHIR_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'AzureSqlDatabaseSHIR'"
+		},
+		"AzureBatch1_properties_typeProperties_batchUri": {
+			"type": "string",
+			"defaultValue": "adf"
+		},
+		"AzureBatch1_properties_typeProperties_poolName": {
+			"type": "string",
+			"defaultValue": "adf"
+		},
+		"AzureBatch1_properties_typeProperties_accountName": {
+			"type": "string",
+			"defaultValue": "adf"
+		},
+		"AzureDataLakeStorageUMI_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlsyofe.dfs.core.windows.net/"
+		},
+		"AzureSqlDatabaseSHIR_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "sqlyofe.database.windows.net"
+		},
+		"AzureSqlDatabaseSHIR_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "yofetest"
+		},
+		"AzureSqlDatabaseSHIR_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "yofe"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/ParquetDateTest')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "CALENDAR_DAY 1.parquet",
+						"container": "test"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "CALENDAR_DATE",
+						"type": "INT96"
+					},
+					{
+						"name": "CALENDAR_CCYY_NBR",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 18
+					},
+					{
+						"name": "CALENDAR_CCYYMM_NBR",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 18
+					},
+					{
+						"name": "CALENDAR_CCYYQ_NBR",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 18
+					},
+					{
+						"name": "CALENDAR_DATE_DESC",
+						"type": "UTF8"
+					},
+					{
+						"name": "CALENDAR_MTH_BEG_DATE",
+						"type": "INT96"
+					},
+					{
+						"name": "CALENDAR_MTH_DAY_DESC",
+						"type": "UTF8"
+					},
+					{
+						"name": "CALENDAR_MTH_DESC",
+						"type": "UTF8"
+					},
+					{
+						"name": "CALENDAR_MTH_END_DATE",
+						"type": "INT96"
+					},
+					{
+						"name": "CALENDAR_QTR_BEG_DATE",
+						"type": "INT96"
+					},
+					{
+						"name": "CALENDAR_QTR_DESC",
+						"type": "UTF8"
+					},
+					{
+						"name": "CALENDAR_QTR_END_DATE",
+						"type": "INT96"
+					},
+					{
+						"name": "CALENDAR_WEEK_BEG_DATE",
+						"type": "INT96"
+					},
+					{
+						"name": "CALENDAR_WEEK_DAY_DESC",
+						"type": "UTF8"
+					},
+					{
+						"name": "CALENDAR_WEEK_DESC",
+						"type": "UTF8"
+					},
+					{
+						"name": "CALENDAR_WEEK_END_DATE",
+						"type": "INT96"
+					},
+					{
+						"name": "CALENDAR_WEEK_NBR",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 18
+					},
+					{
+						"name": "CALENDAR_WEEK_NBR_MON_SUN",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 18
+					},
+					{
+						"name": "CALENDAR_YR_BEG_DATE",
+						"type": "INT96"
+					},
+					{
+						"name": "CALENDAR_YR_END_DATE",
+						"type": "INT96"
+					},
+					{
+						"name": "COMPLETED_QTR_IND",
+						"type": "UTF8"
+					},
+					{
+						"name": "COMPLETED_WEEK_IND",
+						"type": "UTF8"
+					},
+					{
+						"name": "COMPLETED_MTH_IND",
+						"type": "UTF8"
+					},
+					{
+						"name": "COMPLETED_YR_IND",
+						"type": "UTF8"
+					},
+					{
+						"name": "CURRENT_MTH_IND",
+						"type": "UTF8"
+					},
+					{
+						"name": "CURRENT_QTR_IND",
+						"type": "UTF8"
+					},
+					{
+						"name": "CURRENT_WEEK_IND",
+						"type": "UTF8"
+					},
+					{
+						"name": "CURRENT_YR_IND",
+						"type": "UTF8"
+					},
+					{
+						"name": "CURR_LAST_COMPLETED_MTH_IND",
+						"type": "UTF8"
+					},
+					{
+						"name": "CURR_LAST2_COMPLETED_MTH_IND",
+						"type": "UTF8"
+					},
+					{
+						"name": "LAST_COMPLETED_12_MTH_IND",
+						"type": "UTF8"
+					},
+					{
+						"name": "LAST_COMPLETED_30_DAY_IND",
+						"type": "UTF8"
+					},
+					{
+						"name": "LAST_COMPLETED_DAY_IND",
+						"type": "UTF8"
+					},
+					{
+						"name": "LAST_COMPLETED_MTH_IND",
+						"type": "UTF8"
+					},
+					{
+						"name": "LAST_COMPLETED_QTR_IND",
+						"type": "UTF8"
+					},
+					{
+						"name": "LAST_COMPLETED_WEEK_IND",
+						"type": "UTF8"
+					},
+					{
+						"name": "LAST_COMPLETED_YR_IND",
+						"type": "UTF8"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ParquetDest')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "userdatadest",
+						"fileSystem": "yofetest"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "registration_dttm",
+						"type": "INT96"
+					},
+					{
+						"name": "id",
+						"type": "INT32"
+					},
+					{
+						"name": "first_name",
+						"type": "UTF8"
+					},
+					{
+						"name": "last_name",
+						"type": "UTF8"
+					},
+					{
+						"name": "email",
+						"type": "UTF8"
+					},
+					{
+						"name": "gender",
+						"type": "UTF8"
+					},
+					{
+						"name": "ip_address",
+						"type": "UTF8"
+					},
+					{
+						"name": "cc",
+						"type": "UTF8"
+					},
+					{
+						"name": "country",
+						"type": "UTF8"
+					},
+					{
+						"name": "birthdate",
+						"type": "UTF8"
+					},
+					{
+						"name": "salary",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "title",
+						"type": "UTF8"
+					},
+					{
+						"name": "comments",
+						"type": "UTF8"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ParquetMySQL')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "test"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "Id",
+						"type": "UTF8"
+					},
+					{
+						"name": "SinkCreatedOn",
+						"type": "INT96"
+					},
+					{
+						"name": "SinkModifiedOn",
+						"type": "INT96"
+					},
+					{
+						"name": "statecode",
+						"type": "INT64"
+					},
+					{
+						"name": "statuscode",
+						"type": "INT64"
+					},
+					{
+						"name": "community",
+						"type": "INT64"
+					},
+					{
+						"name": "deliveryprioritycode",
+						"type": "INT64"
+					},
+					{
+						"name": "instancetypecode",
+						"type": "INT64"
+					},
+					{
+						"name": "prioritycode",
+						"type": "INT64"
+					},
+					{
+						"name": "isbilled",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "ismapiprivate",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "isregularactivity",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "isworkflowcreated",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "leftvoicemail",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "createdby",
+						"type": "UTF8"
+					},
+					{
+						"name": "createdby_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "createdonbehalfby",
+						"type": "UTF8"
+					},
+					{
+						"name": "createdonbehalfby_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "modifiedby",
+						"type": "UTF8"
+					},
+					{
+						"name": "modifiedby_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "modifiedonbehalfby",
+						"type": "UTF8"
+					},
+					{
+						"name": "modifiedonbehalfby_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "owningbusinessunit",
+						"type": "UTF8"
+					},
+					{
+						"name": "owningbusinessunit_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "owningteam",
+						"type": "UTF8"
+					},
+					{
+						"name": "owningteam_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "owninguser",
+						"type": "UTF8"
+					},
+					{
+						"name": "owninguser_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "regardingobjectid",
+						"type": "UTF8"
+					},
+					{
+						"name": "regardingobjectid_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "sendermailboxid",
+						"type": "UTF8"
+					},
+					{
+						"name": "sendermailboxid_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "serviceid",
+						"type": "UTF8"
+					},
+					{
+						"name": "serviceid_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "slaid",
+						"type": "UTF8"
+					},
+					{
+						"name": "slaid_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "slainvokedid",
+						"type": "UTF8"
+					},
+					{
+						"name": "slainvokedid_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "transactioncurrencyid",
+						"type": "UTF8"
+					},
+					{
+						"name": "transactioncurrencyid_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "ownerid",
+						"type": "UTF8"
+					},
+					{
+						"name": "ownerid_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "allparties",
+						"type": "UTF8"
+					},
+					{
+						"name": "activityadditionalparams",
+						"type": "UTF8"
+					},
+					{
+						"name": "activityid",
+						"type": "UTF8"
+					},
+					{
+						"name": "activitytypecode",
+						"type": "UTF8"
+					},
+					{
+						"name": "actualdurationminutes",
+						"type": "INT64"
+					},
+					{
+						"name": "actualend",
+						"type": "INT96"
+					},
+					{
+						"name": "actualstart",
+						"type": "INT96"
+					},
+					{
+						"name": "createdbyname",
+						"type": "UTF8"
+					},
+					{
+						"name": "createdbyyominame",
+						"type": "UTF8"
+					},
+					{
+						"name": "createdon",
+						"type": "UTF8"
+					},
+					{
+						"name": "createdonbehalfbyname",
+						"type": "UTF8"
+					},
+					{
+						"name": "createdonbehalfbyyominame",
+						"type": "UTF8"
+					},
+					{
+						"name": "deliverylastattemptedon",
+						"type": "INT96"
+					},
+					{
+						"name": "description",
+						"type": "UTF8"
+					},
+					{
+						"name": "descriptionblobid",
+						"type": "UTF8"
+					},
+					{
+						"name": "descriptionblobid_name",
+						"type": "UTF8"
+					},
+					{
+						"name": "exchangeitemid",
+						"type": "UTF8"
+					},
+					{
+						"name": "exchangerate",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 12
+					},
+					{
+						"name": "exchangeweblink",
+						"type": "UTF8"
+					},
+					{
+						"name": "formattedscheduledend",
+						"type": "INT96"
+					},
+					{
+						"name": "formattedscheduledstart",
+						"type": "INT96"
+					},
+					{
+						"name": "lastonholdtime",
+						"type": "INT96"
+					},
+					{
+						"name": "modifiedbyname",
+						"type": "UTF8"
+					},
+					{
+						"name": "modifiedbyyominame",
+						"type": "UTF8"
+					},
+					{
+						"name": "modifiedon",
+						"type": "INT96"
+					},
+					{
+						"name": "modifiedonbehalfbyname",
+						"type": "UTF8"
+					},
+					{
+						"name": "modifiedonbehalfbyyominame",
+						"type": "UTF8"
+					},
+					{
+						"name": "onholdtime",
+						"type": "INT64"
+					},
+					{
+						"name": "owneridname",
+						"type": "UTF8"
+					},
+					{
+						"name": "owneridtype",
+						"type": "UTF8"
+					},
+					{
+						"name": "owneridyominame",
+						"type": "UTF8"
+					},
+					{
+						"name": "owningbusinessunitname",
+						"type": "UTF8"
+					},
+					{
+						"name": "postponeactivityprocessinguntil",
+						"type": "INT96"
+					},
+					{
+						"name": "processid",
+						"type": "UTF8"
+					},
+					{
+						"name": "regardingobjectidname",
+						"type": "UTF8"
+					},
+					{
+						"name": "regardingobjectidyominame",
+						"type": "UTF8"
+					},
+					{
+						"name": "regardingobjecttypecode",
+						"type": "UTF8"
+					},
+					{
+						"name": "scheduleddurationminutes",
+						"type": "INT64"
+					},
+					{
+						"name": "scheduledend",
+						"type": "INT96"
+					},
+					{
+						"name": "scheduledstart",
+						"type": "INT96"
+					},
+					{
+						"name": "sendermailboxidname",
+						"type": "UTF8"
+					},
+					{
+						"name": "senton",
+						"type": "INT96"
+					},
+					{
+						"name": "seriesid",
+						"type": "UTF8"
+					},
+					{
+						"name": "serviceidname",
+						"type": "UTF8"
+					},
+					{
+						"name": "slainvokedidname",
+						"type": "UTF8"
+					},
+					{
+						"name": "slaname",
+						"type": "UTF8"
+					},
+					{
+						"name": "sortdate",
+						"type": "INT96"
+					},
+					{
+						"name": "stageid",
+						"type": "UTF8"
+					},
+					{
+						"name": "subject",
+						"type": "UTF8"
+					},
+					{
+						"name": "timezoneruleversionnumber",
+						"type": "INT64"
+					},
+					{
+						"name": "transactioncurrencyidname",
+						"type": "UTF8"
+					},
+					{
+						"name": "traversedpath",
+						"type": "UTF8"
+					},
+					{
+						"name": "utcconversiontimezonecode",
+						"type": "INT64"
+					},
+					{
+						"name": "versionnumber",
+						"type": "INT64"
+					},
+					{
+						"name": "new_activity_type",
+						"type": "INT64"
+					},
+					{
+						"name": "new_adjuststatus",
+						"type": "INT64"
+					},
+					{
+						"name": "new_adjuststatusmaitrox",
+						"type": "INT64"
+					},
+					{
+						"name": "new_applocal",
+						"type": "INT64"
+					},
+					{
+						"name": "new_appointmentstatus",
+						"type": "INT64"
+					},
+					{
+						"name": "new_approvalstatus",
+						"type": "INT64"
+					},
+					{
+						"name": "new_attachmentreturnstatus",
+						"type": "INT64"
+					},
+					{
+						"name": "new_cancelreason",
+						"type": "INT64"
+					},
+					{
+						"name": "new_cancelstatus",
+						"type": "INT64"
+					},
+					{
+						"name": "new_changereason",
+						"type": "INT64"
+					},
+					{
+						"name": "new_claim_status",
+						"type": "INT64"
+					},
+					{
+						"name": "new_createorderway",
+						"type": "INT64"
+					},
+					{
+						"name": "new_customer_type",
+						"type": "INT64"
+					},
+					{
+						"name": "new_customerpaymentstatus",
+						"type": "INT64"
+					},
+					{
+						"name": "new_dealstatus",
+						"type": "INT64"
+					},
+					{
+						"name": "new_deliverylogisticscorp",
+						"type": "INT64"
+					},
+					{
+						"name": "new_deliverystatus",
+						"type": "INT64"
+					},
+					{
+						"name": "new_deliverytype",
+						"type": "INT64"
+					},
+					{
+						"name": "new_doareturnway",
+						"type": "INT64"
+					},
+					{
+						"name": "new_eene_warranty",
+						"type": "INT64"
+					},
+					{
+						"name": "new_exchange_way",
+						"type": "INT64"
+					},
+					{
+						"name": "new_insuranceinterface_type",
+						"type": "INT64"
+					},
+					{
+						"name": "new_insurancereport_status",
+						"type": "INT64"
+					},
+					{
+						"name": "new_insurancetype",
+						"type": "INT64"
+					},
+					{
+						"name": "new_interfaceresult",
+						"type": "INT64"
+					},
+					{
+						"name": "new_iscatch_type",
+						"type": "INT64"
+					},
+					{
+						"name": "new_ishear",
+						"type": "INT64"
+					},
+					{
+						"name": "new_isprototype",
+						"type": "INT64"
+					},
+					{
+						"name": "new_issettlement",
+						"type": "INT64"
+					},
+					{
+						"name": "new_issettlementhandling",
+						"type": "INT64"
+					},
+					{
+						"name": "new_issettlementmaitrox",
+						"type": "INT64"
+					},
+					{
+						"name": "new_issettlementstorage",
+						"type": "INT64"
+					},
+					{
+						"name": "new_mailing_method",
+						"type": "INT64"
+					},
+					{
+						"name": "new_maintenancetype",
+						"type": "INT64"
+					},
+					{
+						"name": "new_mmipass",
+						"type": "INT64"
+					},
+					{
+						"name": "new_notifyconfirmstatus",
+						"type": "INT64"
+					},
+					{
+						"name": "new_ocordertype",
+						"type": "INT64"
+					},
+					{
+						"name": "new_operatortermial",
+						"type": "INT64"
+					},
+					{
+						"name": "new_origin",
+						"type": "INT64"
+					},
+					{
+						"name": "new_originaltype",
+						"type": "INT64"
+					},
+					{
+						"name": "new_pendingstatus",
+						"type": "INT64"
+					},
+					{
+						"name": "new_policy_type",
+						"type": "INT64"
+					},
+					{
+						"name": "new_projectphase",
+						"type": "INT64"
+					},
+					{
+						"name": "new_pulloutlogisticscorp",
+						"type": "INT64"
+					},
+					{
+						"name": "new_pulloutstatus",
+						"type": "INT64"
+					},
+					{
+						"name": "new_pullouttype",
+						"type": "INT64"
+					},
+					{
+						"name": "new_recoilreasoncode",
+						"type": "INT64"
+					},
+					{
+						"name": "new_recoilstate",
+						"type": "INT64"
+					},
+					{
+						"name": "new_refund_way",
+						"type": "INT64"
+					},
+					{
+						"name": "new_refundpayer",
+						"type": "INT64"
+					},
+					{
+						"name": "new_registerparavalue",
+						"type": "INT64"
+					},
+					{
+						"name": "new_removedoastatus",
+						"type": "INT64"
+					},
+					{
+						"name": "new_repair_level",
+						"type": "INT64"
+					},
+					{
+						"name": "new_returntype",
+						"type": "INT64"
+					},
+					{
+						"name": "new_ruletype",
+						"type": "INT64"
+					},
+					{
+						"name": "new_rv_status",
+						"type": "INT64"
+					},
+					{
+						"name": "new_salechannel",
+						"type": "INT64"
+					},
+					{
+						"name": "new_salechanneltype",
+						"type": "INT64"
+					},
+					{
+						"name": "new_samplestatus",
+						"type": "INT64"
+					},
+					{
+						"name": "new_servicemode",
+						"type": "INT64"
+					},
+					{
+						"name": "new_serviceresult",
+						"type": "INT64"
+					},
+					{
+						"name": "new_servicesubmode",
+						"type": "INT64"
+					},
+					{
+						"name": "new_settlement_state",
+						"type": "INT64"
+					},
+					{
+						"name": "new_seven_eleven_state",
+						"type": "INT64"
+					},
+					{
+						"name": "new_sex",
+						"type": "INT64"
+					},
+					{
+						"name": "new_special_analysis_type",
+						"type": "INT64"
+					},
+					{
+						"name": "new_split_status",
+						"type": "INT64"
+					},
+					{
+						"name": "new_surveyresult",
+						"type": "INT64"
+					},
+					{
+						"name": "new_surveystatus",
+						"type": "INT64"
+					},
+					{
+						"name": "new_take_machine_way",
+						"type": "INT64"
+					},
+					{
+						"name": "new_thirdsysdealstatus",
+						"type": "INT64"
+					},
+					{
+						"name": "new_timesource",
+						"type": "INT64"
+					},
+					{
+						"name": "new_type",
+						"type": "INT64"
+					},
+					{
+						"name": "new_uploaddealstatus",
+						"type": "INT64"
+					},
+					{
+						"name": "new_userdeliverystatus",
+						"type": "INT64"
+					},
+					{
+						"name": "new_warechangeway",
+						"type": "INT64"
+					},
+					{
+						"name": "new_warranty",
+						"type": "INT64"
+					},
+					{
+						"name": "new_warranty_copy",
+						"type": "INT64"
+					},
+					{
+						"name": "new_warrantystatus",
+						"type": "INT64"
+					},
+					{
+						"name": "new_wl_responsibility",
+						"type": "INT64"
+					},
+					{
+						"name": "new_wl_result",
+						"type": "INT64"
+					},
+					{
+						"name": "new_abnormaldata",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_accept",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_createaddsubform",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_crossborder",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_crossbordercollection",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_ifcontactcustomer",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_ifinvoice",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_ifoutsidemachine",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_ifsmsemailsurvey",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_insurancereplace",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_is711",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_isagainrepair",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_iscatch",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_isconform",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_isdamage",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_isdifferent",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_isexchange",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_isfenqi",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_isfulfilewp",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_isinstallment",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_isinternationalwarranty",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_ismeet",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_ismmdamage",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_ismultireplacement",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_isneedbox",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_isoutletpickup",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_isparallelgoods",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_isreadnum",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_isrur",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_isservice",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_isspecialorder",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_istax",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_istransfered",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_istruntype",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_istwodispatch",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_isuseactivity",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_isuseinsurance",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_isvirtual",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_iswarranty",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_iswriteno",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_mmiwhitelist",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_nonconfirm",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_save_signinglist2",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_send_questionnaire",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_whethercostomercanmail",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_whethermorecometohouse",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_associated_order_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_associated_order_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_cancelorder_user_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_cancelorder_user_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_category1_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_category1_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_category2_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_category2_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_category3_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_category3_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_city_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_city_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_closeorder_user_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_closeorder_user_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_contact_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_contact_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_country_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_country_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_county",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_county_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_county_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_county_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_curr_flowstepsid",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_curr_flowstepsid_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_dispatch_user_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_dispatch_user_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_distribute_user_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_distribute_user_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_doareturnlineid",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_doareturnlineid_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_doareturnspcid",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_doareturnspcid_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_doareturnspid",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_doareturnspid_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_ewpblockrule_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_ewpblockrule_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_expenseclaimid",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_expenseclaimid_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_expenseclaimidmaitrox",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_expenseclaimidmaitrox_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_goodsfiles_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_goodsfiles_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_houseuserprofile_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_houseuserprofile_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_incident_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_incident_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_language_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_language_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_last_flowstepsid",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_last_flowstepsid_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_logistics_configuration_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_logistics_configuration_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_model1_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_model1_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_model2_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_model2_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_model3_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_model3_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_new_expenseclaimidhandling",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_new_expenseclaimidhandling_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_newboxtrackingcompany",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_newboxtrackingcompany_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_newdeliverylogisticscompany",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_newdeliverylogisticscompany_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_newpulloutlogisticscorp",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_newpulloutlogisticscorp_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_occurrency",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_occurrency_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_operator_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_operator_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_orderform",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_orderform_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_originalorderid",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_originalorderid_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_originservicestation_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_originservicestation_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_originstation_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_originstation_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_owcurrency",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_owcurrency_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_ownstation_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_ownstation_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_product",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_product_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_productgroup_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_productgroup_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_productmodel_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_productmodel_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_projectmgn_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_projectmgn_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_province_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_province_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_recoilapprove_user_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_recoilapprove_user_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_recoilsubmit_user_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_recoilsubmit_user_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_region_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_region_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_removedoaoperator",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_removedoaoperator_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_repairprovider_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_repairprovider_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_repairrights_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_repairrights_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_repairrightsrule_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_repairrightsrule_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_repairstation_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_repairstation_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_returndoano",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_returndoano_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_saleschannel",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_saleschannel_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_servicehandleinfo",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_servicehandleinfo_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_servicestation_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_servicestation_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_signfor_user_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_signfor_user_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_srv_worker_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_srv_worker_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_srv_workorder_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_srv_workorder_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_station_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_station_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_stocksiteid",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_stocksiteid_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_street_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_street_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_transactioncurrency_handlingservice_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_transactioncurrency_handlingservice_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_transactioncurrency_maitroxservice_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_transactioncurrency_maitroxservice_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_transactioncurrency_service_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_transactioncurrency_service_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_userprofile_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_userprofile_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_userprofilerights_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_userprofilerights_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_whitelist_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_whitelist_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_customerid",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_customerid_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_refund_amount",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 4
+					},
+					{
+						"name": "new_refund_amount_base",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 4
+					},
+					{
+						"name": "importsequencenumber",
+						"type": "INT64"
+					},
+					{
+						"name": "new_accepttime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_action_time",
+						"type": "INT96"
+					},
+					{
+						"name": "new_activate",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_activity_name",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_actual_onsite_time",
+						"type": "INT96"
+					},
+					{
+						"name": "new_actualpay_manualfee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_actualpay_materialcost",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_actualpay_remotefee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_actualrefund_amount",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_address",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_adjusterrorlog",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_adjustretrycount",
+						"type": "INT64"
+					},
+					{
+						"name": "new_adjustretrycountmaitrox",
+						"type": "INT64"
+					},
+					{
+						"name": "new_againrepirorder",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_analyze",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_anomalyinfo",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_application_time",
+						"type": "INT96"
+					},
+					{
+						"name": "new_appointment_visittime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_appointmenttime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_approved_time",
+						"type": "INT96"
+					},
+					{
+						"name": "new_assignedon",
+						"type": "INT96"
+					},
+					{
+						"name": "new_assignno",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_assignnum",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_associated_order_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_b2b_customercode",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_b2b_customername",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_b2x_orderid",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_b2xshare",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 4
+					},
+					{
+						"name": "new_begindetaltime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_begintime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_billingtype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_booktime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_boxfee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_boxtrackingcompany",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_boxtrackingnumber",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_boxtrackingtime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_buydate",
+						"type": "INT96"
+					},
+					{
+						"name": "new_callfeehandling",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_cancelorder_user_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_cancelorder_user_idyominame",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_cancelreaondesc",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_canceltime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_capitalinterestexpense",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_category1_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_category2_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_category3_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_change_order",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_changemoney",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 4
+					},
+					{
+						"name": "new_changemoneyhandling",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_changemoneymaitrox",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_check_time",
+						"type": "INT96"
+					},
+					{
+						"name": "new_check_time2",
+						"type": "INT96"
+					},
+					{
+						"name": "new_city_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_closeorder_user_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_closeorder_user_idyominame",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_closeperson",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_closeremark",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_closetime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_closingtime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_collectionfee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_companycode",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_complateaddress",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_completiontime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_contact",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_contact_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_contact_idyominame",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_contact_time",
+						"type": "INT96"
+					},
+					{
+						"name": "new_country_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_county_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_countyname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_createfrom",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_createperson",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_curr_approvestep_name",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_curr_approvestep_user",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_curr_flowsteps_seq",
+						"type": "INT64"
+					},
+					{
+						"name": "new_curr_flowstepsidname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_customerididtype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_customeridname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_customeridyominame",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_customername",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_customerrefund",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_customsclearancefee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_damagedescription",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_datajson",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_deliveredon",
+						"type": "INT96"
+					},
+					{
+						"name": "new_deliveredstation_time",
+						"type": "INT96"
+					},
+					{
+						"name": "new_delivery_time",
+						"type": "INT96"
+					},
+					{
+						"name": "new_deliverydate",
+						"type": "INT96"
+					},
+					{
+						"name": "new_deliveryendtime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_deliverylogisticscompany",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_deliveryreceivedon",
+						"type": "INT96"
+					},
+					{
+						"name": "new_deliverystarttime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_deliverytrackingnumber",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_departuretime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_detection",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_detectionapi",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_directshippingcost",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_disableexecuteplugin",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_dispatch_user_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_dispatch_user_idyominame",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_dispatchtime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_distancesubsidy",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_distribute_user_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_distribute_user_idyominame",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_doareturnlineidname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_doareturnspcidname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_doareturnspidname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_ecosystemcategorybuybackfee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_email",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_emptycontainerfee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_emptycontainerlogisticsfee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_enddate",
+						"type": "INT96"
+					},
+					{
+						"name": "new_endtime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_engineermemo",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_err_description",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_estimatedfee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_ewpblockrule_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_exchange_stoptime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_exchangecompletion_time",
+						"type": "INT96"
+					},
+					{
+						"name": "new_exchangenote",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_expenseclaimidmaitroxname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_expenseclaimidname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_externalcallfee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_faultdescription",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_faultmsg",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_faultsdesc",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_faultsid",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_feedbacktel",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_fhperson",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_fhremark",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_fhtime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_finalstatetime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_first_arrival",
+						"type": "INT96"
+					},
+					{
+						"name": "new_fixedservicefee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_fromcontrol",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_fsn",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_gender",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_goodsfiles_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_grants",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_guaranteefeeshare",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 4
+					},
+					{
+						"name": "new_handlingfee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_handlingfeekpi",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_houseuserprofile_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_idothers",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_idvan",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_imei",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_imei2",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_incident_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_infomationfee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_inspect_fee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_installcompletion_time",
+						"type": "INT96"
+					},
+					{
+						"name": "new_installdate",
+						"type": "INT96"
+					},
+					{
+						"name": "new_insurancematerialpay",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_invoice_address",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_invoice_num",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_invoice_time",
+						"type": "INT96"
+					},
+					{
+						"name": "new_invoicename",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_issuance_time",
+						"type": "INT96"
+					},
+					{
+						"name": "new_issuesreturn_stoptime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_isuseinsurancecost",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_kilometers",
+						"type": "INT64"
+					},
+					{
+						"name": "new_language_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_last_approve_time",
+						"type": "INT96"
+					},
+					{
+						"name": "new_last_approvestep_name",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_last_approvestep_user",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_last_flowsteps_seq",
+						"type": "INT64"
+					},
+					{
+						"name": "new_last_flowstepsidname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_latitude",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 5
+					},
+					{
+						"name": "new_localbuycostbuysell",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_localbuymarkupcostbuysell",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_localbuyreplacementcost",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_logistic_zone",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_logistics_configuration_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_logisticsfee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_logisticsfeeb2x",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_logisticsfeehandling",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_longitude",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 5
+					},
+					{
+						"name": "new_mailorder",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_maintenanceinterest",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_manualfee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_markuplogisticsfee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_markupreplacementcost",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_material_shortage_time",
+						"type": "INT96"
+					},
+					{
+						"name": "new_materialcost",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_materialdetails",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_materialfee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_memo",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_method",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_mileage",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_miliao",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_minimumworkorderfee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_miorderid",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_model1_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_model2_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_model3_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_msdyn_workorderid",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_name",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_new_expenseclaimidhandlingname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_newboxtrackingcompanyname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_newdeliverylogisticscompanyname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_newpulloutlogisticscorpname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_occurrencyname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_okura_deliverytime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_openid",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_operator_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_operator_ordernumber",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_operatorname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_order_jc",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_ordercode",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_orderformname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_originalorderidname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_originservicestation_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_originstation_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_othercost",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_otherfeedesc",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_othermiscellaneouscharges",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_othermiscellaneouschargeshandling",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_otherphone",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_outsidecost",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_owcurrencyname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_ownstation_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_partcost",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 4
+					},
+					{
+						"name": "new_partservicecost",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 4
+					},
+					{
+						"name": "new_partservicecostkpi",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_partsmgntfee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_partsoperationfee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_partstotalfee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 4
+					},
+					{
+						"name": "new_pay_manualfee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_pay_materialcost",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_pay_remotefee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_pendingtime",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 1
+					},
+					{
+						"name": "new_phone",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_pick_time",
+						"type": "INT96"
+					},
+					{
+						"name": "new_pincode",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_placetime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_policy_starttime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_prefix",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_processperson",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_processremark",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_produceddate",
+						"type": "INT96"
+					},
+					{
+						"name": "new_productgroup_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_productmodel_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_productname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_projectmgn_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_province_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_pulloutendtime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_pulloutstarttime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_pullouttime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_pullouttrackingnumber",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_purchasefor",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_reason",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_receipttimee",
+						"type": "INT96"
+					},
+					{
+						"name": "new_receivableamount",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_receivedon",
+						"type": "INT96"
+					},
+					{
+						"name": "new_receivetime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_recoilapprove_time",
+						"type": "INT96"
+					},
+					{
+						"name": "new_recoilapprove_user_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_recoilapprove_user_idyominame",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_recoilsubmit_time",
+						"type": "INT96"
+					},
+					{
+						"name": "new_recoilsubmit_user_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_recoilsubmit_user_idyominame",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_recoireason",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_recordingfee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_refurbishfee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_refurbishmentfee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_refusedreason",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_region_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_remakes_pos",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_remotefee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_remoterepairfee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_removedoadesc",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_removedoaoperatorname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_removedoaoperatoryominame",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_removedoatime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_repair_stoptime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_repairfee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 4
+					},
+					{
+						"name": "new_repairfeekpi",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 4
+					},
+					{
+						"name": "new_repairprovider_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_repairrights_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_repairrightsrule_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_repairstation_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_repairsubsidy",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_replacefee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_replacement_statistics",
+						"type": "INT64"
+					},
+					{
+						"name": "new_reportno",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_responsetime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_return_channel",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_return_endtime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_return_order",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_return_stoptime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_return_time",
+						"type": "INT96"
+					},
+					{
+						"name": "new_returnaddress",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_returndoanoname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_returnnote",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_returnvisitfee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_reverselogisticsfee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_rowlock",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_rsp_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_rurtime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_sale",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_saleamounthandling",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_saleentity",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_sales_type",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_saleschannelname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_sapid",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_servermemo",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_servicecenter_code",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_servicehandleinfoname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_servicememo",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_servicestation_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_servicetimes",
+						"type": "INT64"
+					},
+					{
+						"name": "new_settlementmoney",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 4
+					},
+					{
+						"name": "new_settlementmoneyhandling",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_settlementmoneymaitrox",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_settlementtime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_settlementtimehandling",
+						"type": "INT96"
+					},
+					{
+						"name": "new_settlementtimemaitrox",
+						"type": "INT96"
+					},
+					{
+						"name": "new_settlementtimestorage",
+						"type": "INT96"
+					},
+					{
+						"name": "new_settlereason",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_settlereasonhandling",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_settlereasonmaitor",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_settlereasonstorage",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_shipment_type",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_shipment_type2",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_signfor_user_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_signfor_user_idyominame",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_sn",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_solution",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_sparepartscost",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_sparepartscostbuysell",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_sparepartscostmarkup",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_sparepartscoststorage",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_specialfeeshare",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 4
+					},
+					{
+						"name": "new_specialsubsubsidy",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 4
+					},
+					{
+						"name": "new_srv_worker_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_srv_workorder_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_srv_workorderid",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_startdate",
+						"type": "INT96"
+					},
+					{
+						"name": "new_station_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_station_tel",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_stockin",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_stockout",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_stocksiteidname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_street_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_sub_station_type",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_subject",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_submit_time",
+						"type": "INT96"
+					},
+					{
+						"name": "new_sumreceivableamount",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_sumtrueamount",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_supervisenum",
+						"type": "INT64"
+					},
+					{
+						"name": "new_supervisereason",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_supervisiontime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_systemuser_tel",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_tel2",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_thirdparty_orderid",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_thirdpartyordernumber",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_total_labor",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_totalcost",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_trade_no",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_transactioncurrency_handlingservice_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_transactioncurrency_maitroxservice_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_transactioncurrency_service_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_trueamount",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_turntypereason",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_tvprotectionmaterialfee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_uniquecode",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_updateuniquecode",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_upload_orderid",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_uploadcompletion_time",
+						"type": "INT96"
+					},
+					{
+						"name": "new_userid",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_userpay",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_userprofile_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_userprofile_name",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_userprofile_number",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_userprofilerights_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_usership_time",
+						"type": "INT96"
+					},
+					{
+						"name": "new_vote_time",
+						"type": "INT96"
+					},
+					{
+						"name": "new_warehousingfee",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_warrantytime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_waybilltrigger_time",
+						"type": "INT96"
+					},
+					{
+						"name": "new_whitelist_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_withholdingfeemaitrox",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_withholdingfeerecoil",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_withholdingmoney",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 4
+					},
+					{
+						"name": "new_withholdingmoneyhandling",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_withholdingmoneymaitrox",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_wl_remark",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_workhourcost",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_xmdeliverystatus",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_xmrefundcompletiontime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_xms_acceptorg",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_xms_appointtime",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_xms_itemid",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_xms_orderid",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_xms_processes",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_zip_code",
+						"type": "UTF8"
+					},
+					{
+						"name": "overriddencreatedon",
+						"type": "INT96"
+					},
+					{
+						"name": "new_specialsubsubsidyhandling",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_intdelivery_type",
+						"type": "INT64"
+					},
+					{
+						"name": "new_pickup_point_info_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_pickup_point_info_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_expvisitdate",
+						"type": "INT96"
+					},
+					{
+						"name": "new_pickup_point_info_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_shipordernumber",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_isuseinstallrights",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_ow_receipt_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_ow_receipt_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_ow_receipt_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_saprefundfinishtime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_isforceinstall",
+						"type": "INT64"
+					},
+					{
+						"name": "new_dial_datetime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_signfor_datetime",
+						"type": "INT96"
+					},
+					{
+						"name": "new_issettlementinstall",
+						"type": "INT64"
+					},
+					{
+						"name": "new_workorder_costtable_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_workorder_costtable_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_service_duration",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					},
+					{
+						"name": "new_settlementtimeinstall",
+						"type": "INT96"
+					},
+					{
+						"name": "new_settlereasoninstall",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_workorder_costtable_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_tms_pictures",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_kpitype_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_kpitype_id_entitytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_kpitype_idname",
+						"type": "UTF8"
+					},
+					{
+						"name": "new_xms",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "new_reduce_labor_cost",
+						"type": "DECIMAL",
+						"precision": 38,
+						"scale": 2
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ParquetSrc')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "[userdata].parquet",
+						"fileSystem": "yofetest"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "registration_dttm",
+						"type": "INT96"
+					},
+					{
+						"name": "id",
+						"type": "INT32"
+					},
+					{
+						"name": "first_name",
+						"type": "UTF8"
+					},
+					{
+						"name": "last_name",
+						"type": "UTF8"
+					},
+					{
+						"name": "email",
+						"type": "UTF8"
+					},
+					{
+						"name": "gender",
+						"type": "UTF8"
+					},
+					{
+						"name": "ip_address",
+						"type": "UTF8"
+					},
+					{
+						"name": "cc",
+						"type": "UTF8"
+					},
+					{
+						"name": "country",
+						"type": "UTF8"
+					},
+					{
+						"name": "birthdate",
+						"type": "UTF8"
+					},
+					{
+						"name": "salary",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "title",
+						"type": "UTF8"
+					},
+					{
+						"name": "comments",
+						"type": "UTF8"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PartitionTestDest')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "partitiontestdest"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/RestResource1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "RestService1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "RestResource",
+				"typeProperties": {
+					"relativeUrl": ""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SCDJson')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "delta/_delta_log",
+						"fileSystem": "yofetest"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SchemaControlTbl')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "controltbl.csv",
+						"fileSystem": "test"
+					},
+					"columnDelimiter": ",",
+					"rowDelimiter": "\r",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "entity",
+						"type": "String"
+					},
+					{
+						"name": "keycol",
+						"type": "String"
+					},
+					{
+						"name": "query",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SchemaDest')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSynapseAnalytics1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "CALENDAR_DATE",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "CALENDAR_CCYY_NBR",
+						"type": "decimal",
+						"precision": 38,
+						"scale": 18
+					},
+					{
+						"name": "CALENDAR_CCYYMM_NBR",
+						"type": "decimal",
+						"precision": 38,
+						"scale": 18
+					},
+					{
+						"name": "CALENDAR_CCYYQ_NBR",
+						"type": "decimal",
+						"precision": 38,
+						"scale": 18
+					},
+					{
+						"name": "CALENDAR_DATE_DESC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CALENDAR_MTH_BEG_DATE",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "CALENDAR_MTH_DAY_DESC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CALENDAR_MTH_DESC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CALENDAR_MTH_END_DATE",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "CALENDAR_QTR_BEG_DATE",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "CALENDAR_QTR_DESC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CALENDAR_QTR_END_DATE",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "CALENDAR_WEEK_BEG_DATE",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "CALENDAR_WEEK_DAY_DESC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CALENDAR_WEEK_DESC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CALENDAR_WEEK_END_DATE",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "CALENDAR_WEEK_NBR",
+						"type": "decimal",
+						"precision": 38,
+						"scale": 18
+					},
+					{
+						"name": "CALENDAR_WEEK_NBR_MON_SUN",
+						"type": "decimal",
+						"precision": 38,
+						"scale": 18
+					},
+					{
+						"name": "CALENDAR_YR_BEG_DATE",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "CALENDAR_YR_END_DATE",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "COMPLETED_QTR_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COMPLETED_WEEK_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COMPLETED_MTH_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COMPLETED_YR_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CURRENT_MTH_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CURRENT_QTR_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CURRENT_WEEK_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CURRENT_YR_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CURR_LAST_COMPLETED_MTH_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CURR_LAST2_COMPLETED_MTH_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LAST_COMPLETED_12_MTH_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LAST_COMPLETED_30_DAY_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LAST_COMPLETED_DAY_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LAST_COMPLETED_MTH_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LAST_COMPLETED_QTR_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LAST_COMPLETED_WEEK_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LAST_COMPLETED_YR_IND",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "SchemaDest"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SchemaSrc')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSynapseAnalytics1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "CALENDAR_DATE",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "CALENDAR_CCYY_NBR",
+						"type": "decimal",
+						"precision": 38,
+						"scale": 18
+					},
+					{
+						"name": "CALENDAR_CCYYMM_NBR",
+						"type": "decimal",
+						"precision": 38,
+						"scale": 18
+					},
+					{
+						"name": "CALENDAR_CCYYQ_NBR",
+						"type": "decimal",
+						"precision": 38,
+						"scale": 18
+					},
+					{
+						"name": "CALENDAR_DATE_DESC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CALENDAR_MTH_BEG_DATE",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "CALENDAR_MTH_DAY_DESC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CALENDAR_MTH_DESC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CALENDAR_MTH_END_DATE",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "CALENDAR_QTR_BEG_DATE",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "CALENDAR_QTR_DESC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CALENDAR_QTR_END_DATE",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "CALENDAR_WEEK_BEG_DATE",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "CALENDAR_WEEK_DAY_DESC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CALENDAR_WEEK_DESC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CALENDAR_WEEK_END_DATE",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "CALENDAR_WEEK_NBR",
+						"type": "decimal",
+						"precision": 38,
+						"scale": 18
+					},
+					{
+						"name": "CALENDAR_WEEK_NBR_MON_SUN",
+						"type": "decimal",
+						"precision": 38,
+						"scale": 18
+					},
+					{
+						"name": "CALENDAR_YR_BEG_DATE",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "CALENDAR_YR_END_DATE",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "COMPLETED_QTR_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COMPLETED_WEEK_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COMPLETED_MTH_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COMPLETED_YR_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CURRENT_MTH_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CURRENT_QTR_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CURRENT_WEEK_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CURRENT_YR_IND",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "SchemaSrc"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SchemaStagingADLS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"filename": {
+						"type": "String",
+						"defaultValue": "SchemaStaging.csv"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().filename",
+							"type": "Expression"
+						},
+						"fileSystem": "test"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "CALENDAR_DATE",
+						"type": "String"
+					},
+					{
+						"name": "CALENDAR_CCYY_NBR",
+						"type": "String"
+					},
+					{
+						"name": "CALENDAR_CCYYMM_NBR",
+						"type": "String"
+					},
+					{
+						"name": "CALENDAR_CCYYQ_NBR",
+						"type": "String"
+					},
+					{
+						"name": "CALENDAR_DATE_DESC",
+						"type": "String"
+					},
+					{
+						"name": "CALENDAR_MTH_BEG_DATE",
+						"type": "String"
+					},
+					{
+						"name": "CALENDAR_MTH_DAY_DESC",
+						"type": "String"
+					},
+					{
+						"name": "CALENDAR_MTH_DESC",
+						"type": "String"
+					},
+					{
+						"name": "CALENDAR_MTH_END_DATE",
+						"type": "String"
+					},
+					{
+						"name": "CALENDAR_QTR_BEG_DATE",
+						"type": "String"
+					},
+					{
+						"name": "CALENDAR_QTR_DESC",
+						"type": "String"
+					},
+					{
+						"name": "CALENDAR_QTR_END_DATE",
+						"type": "String"
+					},
+					{
+						"name": "CALENDAR_WEEK_BEG_DATE",
+						"type": "String"
+					},
+					{
+						"name": "CALENDAR_WEEK_DAY_DESC",
+						"type": "String"
+					},
+					{
+						"name": "CALENDAR_WEEK_DESC",
+						"type": "String"
+					},
+					{
+						"name": "CALENDAR_WEEK_END_DATE",
+						"type": "String"
+					},
+					{
+						"name": "CALENDAR_WEEK_NBR",
+						"type": "String"
+					},
+					{
+						"name": "CALENDAR_WEEK_NBR_MON_SUN",
+						"type": "String"
+					},
+					{
+						"name": "CALENDAR_YR_BEG_DATE",
+						"type": "String"
+					},
+					{
+						"name": "CALENDAR_YR_END_DATE",
+						"type": "String"
+					},
+					{
+						"name": "COMPLETED_QTR_IND",
+						"type": "String"
+					},
+					{
+						"name": "COMPLETED_WEEK_IND",
+						"type": "String"
+					},
+					{
+						"name": "COMPLETED_MTH_IND",
+						"type": "String"
+					},
+					{
+						"name": "COMPLETED_YR_IND",
+						"type": "String"
+					},
+					{
+						"name": "CURRENT_MTH_IND",
+						"type": "String"
+					},
+					{
+						"name": "CURRENT_QTR_IND",
+						"type": "String"
+					},
+					{
+						"name": "CURRENT_WEEK_IND",
+						"type": "String"
+					},
+					{
+						"name": "CURRENT_YR_IND",
+						"type": "String"
+					},
+					{
+						"name": "CURR_LAST_COMPLETED_MTH_IND",
+						"type": "String"
+					},
+					{
+						"name": "CURR_LAST2_COMPLETED_MTH_IND",
+						"type": "String"
+					},
+					{
+						"name": "LAST_COMPLETED_12_MTH_IND",
+						"type": "String"
+					},
+					{
+						"name": "LAST_COMPLETED_30_DAY_IND",
+						"type": "String"
+					},
+					{
+						"name": "LAST_COMPLETED_DAY_IND",
+						"type": "String"
+					},
+					{
+						"name": "LAST_COMPLETED_MTH_IND",
+						"type": "String"
+					},
+					{
+						"name": "LAST_COMPLETED_QTR_IND",
+						"type": "String"
+					},
+					{
+						"name": "LAST_COMPLETED_WEEK_IND",
+						"type": "String"
+					},
+					{
+						"name": "LAST_COMPLETED_YR_IND",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SchemaStagingParquet')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "SchemaStaging.parquet",
+						"fileSystem": "test"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "ID",
+						"type": "INT32"
+					},
+					{
+						"name": "Name",
+						"type": "UTF8"
+					},
+					{
+						"name": "Datetime",
+						"type": "INT96"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SchemaStagingSynapse')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSynapseAnalytics1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "CALENDAR_DATE",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "CALENDAR_CCYY_NBR",
+						"type": "decimal",
+						"precision": 38,
+						"scale": 18
+					},
+					{
+						"name": "CALENDAR_CCYYMM_NBR",
+						"type": "decimal",
+						"precision": 38,
+						"scale": 18
+					},
+					{
+						"name": "CALENDAR_CCYYQ_NBR",
+						"type": "decimal",
+						"precision": 38,
+						"scale": 18
+					},
+					{
+						"name": "CALENDAR_DATE_DESC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CALENDAR_MTH_BEG_DATE",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "CALENDAR_MTH_DAY_DESC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CALENDAR_MTH_DESC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CALENDAR_MTH_END_DATE",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "CALENDAR_QTR_BEG_DATE",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "CALENDAR_QTR_DESC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CALENDAR_QTR_END_DATE",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "CALENDAR_WEEK_BEG_DATE",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "CALENDAR_WEEK_DAY_DESC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CALENDAR_WEEK_DESC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CALENDAR_WEEK_END_DATE",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "CALENDAR_WEEK_NBR",
+						"type": "decimal",
+						"precision": 38,
+						"scale": 18
+					},
+					{
+						"name": "CALENDAR_WEEK_NBR_MON_SUN",
+						"type": "decimal",
+						"precision": 38,
+						"scale": 18
+					},
+					{
+						"name": "CALENDAR_YR_BEG_DATE",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "CALENDAR_YR_END_DATE",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "COMPLETED_QTR_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COMPLETED_WEEK_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COMPLETED_MTH_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COMPLETED_YR_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CURRENT_MTH_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CURRENT_QTR_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CURRENT_WEEK_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CURRENT_YR_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CURR_LAST_COMPLETED_MTH_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CURR_LAST2_COMPLETED_MTH_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LAST_COMPLETED_12_MTH_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LAST_COMPLETED_30_DAY_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LAST_COMPLETED_DAY_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LAST_COMPLETED_MTH_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LAST_COMPLETED_QTR_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LAST_COMPLETED_WEEK_IND",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LAST_COMPLETED_YR_IND",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "SchemaStaging"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SnowflakeTableV2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Snowflake1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SnowflakeV2Table",
+				"schema": [],
+				"typeProperties": {
+					"schema": "test",
+					"table": "test"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Xml1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "HttpServer1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Xml",
+				"typeProperties": {
+					"location": {
+						"type": "HttpServerLocation"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/modelJson')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorageDeltaLake",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"container": {
+						"type": "string"
+					},
+					"folder": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "model.json",
+						"folderPath": {
+							"value": "@dataset().folder",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().container",
+							"type": "Expression"
+						}
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/optionsetsrc')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "OptionsetMetadata.csv",
+						"folderPath": "optionsetmetadata",
+						"fileSystem": "synapselinkfordataversedemo"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBatch1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBatch",
+				"typeProperties": {
+					"batchUri": "[parameters('AzureBatch1_properties_typeProperties_batchUri')]",
+					"poolName": "[parameters('AzureBatch1_properties_typeProperties_poolName')]",
+					"accountName": "[parameters('AzureBatch1_properties_typeProperties_accountName')]",
+					"linkedServiceName": {
+						"referenceName": "AzureBlobStorage1",
+						"type": "LinkedServiceReference"
+					},
+					"accessKey": {
+						"type": "SecureString",
+						"value": "[parameters('AzureBatch1_accessKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStorageUMI')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('AzureDataLakeStorageUMI_properties_typeProperties_url')]",
+					"credential": {
+						"referenceName": "yofesp",
+						"type": "CredentialReference"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabaseSHIR')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('AzureSqlDatabaseSHIR_properties_typeProperties_server')]",
+					"database": "[parameters('AzureSqlDatabaseSHIR_properties_typeProperties_database')]",
+					"encrypt": "optional",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('AzureSqlDatabaseSHIR_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('AzureSqlDatabaseSHIR_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "SHIRHA",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

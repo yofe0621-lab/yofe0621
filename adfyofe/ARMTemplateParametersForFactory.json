@@ -1,0 +1,456 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adfyofe"
+		},
+		"AzureBatch1_accessKey": {
+			"value": ""
+		},
+		"AzureBlobStoragelivemode_connectionString": {
+			"value": ""
+		},
+		"AzureDatabricks1_accessToken": {
+			"value": ""
+		},
+		"AzureDatabricksDeltaLake1_accessToken": {
+			"value": ""
+		},
+		"AzureMySql1_connectionString": {
+			"value": ""
+		},
+		"AzureMySql2_connectionString": {
+			"value": ""
+		},
+		"AzureSqlDatabase1_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=;Initial Catalog="
+		},
+		"AzureSqlDatabase2_connectionString": {
+			"value": ""
+		},
+		"AzureSqlDatabaseCopy_password": {
+			"value": ""
+		},
+		"AzureSqlDatabaseLH_servicePrincipalCredential": {
+			"value": ""
+		},
+		"AzureSqlDatabaseParam_password": {
+			"value": ""
+		},
+		"AzureSqlDatabaseSHIR_password": {
+			"value": ""
+		},
+		"AzureSynapseAnalyticsLegacy_connectionString": {
+			"value": ""
+		},
+		"CosmosDbNoSql1_connectionString": {
+			"value": ""
+		},
+		"CosmosDbNoSqlDest_connectionString": {
+			"value": ""
+		},
+		"Dataverse1_password": {
+			"value": ""
+		},
+		"Dynamics1_servicePrincipalCredential": {
+			"value": ""
+		},
+		"DynamicsCrm1_servicePrincipalCredential": {
+			"value": ""
+		},
+		"FileServer1_password": {
+			"value": ""
+		},
+		"Hive1_password": {
+			"value": ""
+		},
+		"HttpServer1_password": {
+			"value": ""
+		},
+		"InformixLS_connectionString": {
+			"value": ""
+		},
+		"InformixLS_password": {
+			"value": ""
+		},
+		"InformixLS_credential": {
+			"value": ""
+		},
+		"Lakehouse1_servicePrincipalCredential": {
+			"value": ""
+		},
+		"MySql1_password": {
+			"value": ""
+		},
+		"MySqlAzure_password": {
+			"value": ""
+		},
+		"MySqlLegacy_connectionString": {
+			"value": ""
+		},
+		"OData1_password": {
+			"value": ""
+		},
+		"OdbcMySQL_connectionString": {
+			"value": ""
+		},
+		"OdbcMySQL_password": {
+			"value": ""
+		},
+		"OdbcSQL_connectionString": {
+			"value": ""
+		},
+		"OdbcSQL_password": {
+			"value": ""
+		},
+		"Oracle1_connectionString": {
+			"value": ""
+		},
+		"RestService1_password": {
+			"value": ""
+		},
+		"Salesforce1_clientSecret": {
+			"value": ""
+		},
+		"SapEcc1_password": {
+			"value": ""
+		},
+		"SapEcc2_password": {
+			"value": ""
+		},
+		"SapHana1_connectionString": {
+			"value": ""
+		},
+		"SapOdp1_password": {
+			"value": ""
+		},
+		"SftpTest_password": {
+			"value": ""
+		},
+		"SharePointOnlineList1_servicePrincipalEmbeddedCert": {
+			"value": ""
+		},
+		"SharePointOnlineList1_servicePrincipalEmbeddedCertPassword": {
+			"value": ""
+		},
+		"Snowflake1_password": {
+			"value": ""
+		},
+		"Snowflake2Trial_password": {
+			"value": ""
+		},
+		"SnowflakeLegacy_connectionString": {
+			"value": ""
+		},
+		"SnowflakeTrail_connectionString": {
+			"value": ""
+		},
+		"SqlServer1_connectionString": {
+			"value": ""
+		},
+		"Warehouse1_servicePrincipalCredential": {
+			"value": ""
+		},
+		"blobyofe_connectionString": {
+			"value": ""
+		},
+		"linkedService1_connectionString": {
+			"value": ""
+		},
+		"AzureBatch1_properties_typeProperties_batchUri": {
+			"value": "adf"
+		},
+		"AzureBatch1_properties_typeProperties_poolName": {
+			"value": "adf"
+		},
+		"AzureBatch1_properties_typeProperties_accountName": {
+			"value": "adf"
+		},
+		"AzureBlobStorage1_properties_typeProperties_serviceEndpoint": {
+			"value": "https://adlsyofe.blob.core.windows.net/"
+		},
+		"AzureBlobStorageSAS_sasUri": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"value": "https://adlsyofe.dfs.core.windows.net/"
+		},
+		"AzureDataLakeStorageDeltaLake_properties_typeProperties_url": {
+			"value": "https://adlsyofe.dfs.core.windows.net/"
+		},
+		"AzureDataLakeStorageUMI_properties_typeProperties_url": {
+			"value": "https://adlsyofe.dfs.core.windows.net/"
+		},
+		"AzureDataLakeStorageVnet_properties_typeProperties_url": {
+			"value": "https://adlsyofe.dfs.core.windows.net/"
+		},
+		"AzureDataLakeStoragecn_sasUri": {
+			"value": ""
+		},
+		"AzureDatabricks1_properties_typeProperties_existingClusterId": {
+			"value": "0413-045743-0vb84rlo"
+		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"value": "https://yofeakv.vault.azure.net/"
+		},
+		"AzureSqlDatabaseCopy_properties_typeProperties_server": {
+			"value": "sqlyofe.database.windows.net"
+		},
+		"AzureSqlDatabaseCopy_properties_typeProperties_database": {
+			"value": "yofetest"
+		},
+		"AzureSqlDatabaseCopy_properties_typeProperties_userName": {
+			"value": "yofe"
+		},
+		"AzureSqlDatabaseLH_properties_typeProperties_server": {
+			"value": "elbcmw5yhunefaywginre76ahy-zfrmf5thj7fubfuwhr2hjghzhm.datawarehouse.fabric.microsoft.com"
+		},
+		"AzureSqlDatabaseLH_properties_typeProperties_database": {
+			"value": "ADF11"
+		},
+		"AzureSqlDatabaseLH_properties_typeProperties_servicePrincipalId": {
+			"value": "0e14f34b-eda4-4b2b-bae3-4793340e7d4c  "
+		},
+		"AzureSqlDatabaseLH_properties_typeProperties_tenant": {
+			"value": "5b26c222-3db8-421a-8316-321b127fc03e"
+		},
+		"AzureSqlDatabaseParam_properties_typeProperties_server": {
+			"value": "@{linkedService().hostname}"
+		},
+		"AzureSqlDatabaseParam_properties_typeProperties_database": {
+			"value": "@{linkedService().dbname}"
+		},
+		"AzureSqlDatabaseParam_properties_typeProperties_userName": {
+			"value": "yofe"
+		},
+		"AzureSqlDatabaseSHIR_properties_typeProperties_server": {
+			"value": "sqlyofe.database.windows.net"
+		},
+		"AzureSqlDatabaseSHIR_properties_typeProperties_database": {
+			"value": "yofetest"
+		},
+		"AzureSqlDatabaseSHIR_properties_typeProperties_userName": {
+			"value": "yofe"
+		},
+		"AzureSynapseAnalytics1_properties_typeProperties_server": {
+			"value": "yofesynapse.sql.azuresynapse.net"
+		},
+		"AzureSynapseAnalytics1_properties_typeProperties_database": {
+			"value": "sqlpoolyofe"
+		},
+		"AzureSynapseAnalyticsFault_properties_typeProperties_server": {
+			"value": "yofesynapse.sql.azuresynapse.net"
+		},
+		"AzureSynapseAnalyticsFault_properties_typeProperties_database": {
+			"value": "sqlpoolyofe"
+		},
+		"AzureSynapseAnalyticsMaster_properties_typeProperties_server": {
+			"value": "yofesynapse.sql.azuresynapse.net"
+		},
+		"AzureSynapseAnalyticsMaster_properties_typeProperties_database": {
+			"value": "master"
+		},
+		"Dataverse1_properties_typeProperties_username": {
+			"value": "testdw@dynftegcr.onmicrosoft.com"
+		},
+		"Dynamics1_properties_typeProperties_servicePrincipalId": {
+			"value": "ser"
+		},
+		"DynamicsCrm1_properties_typeProperties_servicePrincipalId": {
+			"value": "asdf"
+		},
+		"ExternalBlob_sasUri": {
+			"value": ""
+		},
+		"FileServer1_properties_typeProperties_host": {
+			"value": "C:\\test"
+		},
+		"FileServer1_properties_typeProperties_userId": {
+			"value": "yofeshir01\\yofe"
+		},
+		"Hive1_properties_typeProperties_host": {
+			"value": "yofetesthive.azurehdinsight.net"
+		},
+		"Hive1_properties_typeProperties_username": {
+			"value": "admin"
+		},
+		"HttpServer1_properties_typeProperties_url": {
+			"value": "test"
+		},
+		"HttpServer1_properties_typeProperties_userName": {
+			"value": "yofe"
+		},
+		"HttpServerSPO_properties_typeProperties_url": {
+			"value": "@{linkedService().downloadUrl}"
+		},
+		"InformixLS_properties_typeProperties_userName": {
+			"value": "informix"
+		},
+		"Lakehouse1_properties_typeProperties_tenant": {
+			"value": "5b26c222-3db8-421a-8316-321b127fc03e"
+		},
+		"Lakehouse1_properties_typeProperties_servicePrincipalId": {
+			"value": "0e14f34b-eda4-4b2b-bae3-4793340e7d4c"
+		},
+		"MySql1_properties_typeProperties_server": {
+			"value": "127.0.0.1"
+		},
+		"MySql1_properties_typeProperties_database": {
+			"value": "test"
+		},
+		"MySql1_properties_typeProperties_username": {
+			"value": "root"
+		},
+		"MySqlAzure_properties_typeProperties_server": {
+			"value": "yofemysql.mysql.database.azure.com"
+		},
+		"MySqlAzure_properties_typeProperties_database": {
+			"value": "test"
+		},
+		"MySqlAzure_properties_typeProperties_username": {
+			"value": "yofe"
+		},
+		"OData1_properties_typeProperties_url": {
+			"value": "test"
+		},
+		"OData1_properties_typeProperties_userName": {
+			"value": "yofe"
+		},
+		"OdbcMySQL_properties_typeProperties_userName": {
+			"value": "yofe"
+		},
+		"OdbcSQL_properties_typeProperties_userName": {
+			"value": "yofe"
+		},
+		"RestService1_properties_typeProperties_url": {
+			"value": "test"
+		},
+		"RestService1_properties_typeProperties_userName": {
+			"value": "yofe"
+		},
+		"Salesforce1_properties_typeProperties_environmentUrl": {
+			"value": "https://asdf.my.salesforce.com"
+		},
+		"Salesforce1_properties_typeProperties_clientId": {
+			"value": "sdf"
+		},
+		"SapEcc1_properties_typeProperties_url": {
+			"value": "test"
+		},
+		"SapEcc1_properties_typeProperties_username": {
+			"value": "yofe"
+		},
+		"SapEcc2_properties_typeProperties_url": {
+			"value": "test"
+		},
+		"SapEcc2_properties_typeProperties_username": {
+			"value": "yofe"
+		},
+		"SapOdp1_properties_typeProperties_clientId": {
+			"value": "test"
+		},
+		"SapOdp1_properties_typeProperties_userName": {
+			"value": "yofe"
+		},
+		"SapOdp1_properties_typeProperties_server": {
+			"value": "test"
+		},
+		"SapOdp1_properties_typeProperties_systemNumber": {
+			"value": "test"
+		},
+		"SftpTest_properties_typeProperties_host": {
+			"value": "adlsyofe.adlsyofe@adlsyofe.blob.core.windows.net"
+		},
+		"SftpTest_properties_typeProperties_userName": {
+			"value": "adlsyofe"
+		},
+		"SharePointOnlineList1_properties_typeProperties_servicePrincipalId": {
+			"value": "test"
+		},
+		"Snowflake1_properties_typeProperties_database": {
+			"value": "TEST"
+		},
+		"Snowflake2Trial_properties_typeProperties_database": {
+			"value": "TEST"
+		},
+		"Warehouse1_properties_typeProperties_endpoint": {
+			"value": "x6eps4xrq2xudenlfv6naeo3i4-eg7v362vpnbupaazpqa6djyiuq.msit-datawarehouse.fabric.microsoft.com"
+		},
+		"Warehouse1_properties_typeProperties_tenant": {
+			"value": "16b3c013-d300-468d-ac64-7eda0820b6d3"
+		},
+		"Warehouse1_properties_typeProperties_servicePrincipalId": {
+			"value": "test"
+		},
+		"BlobTrigger_properties_typeProperties_scope": {
+			"value": "/subscriptions/26c1fddb-1b8b-4755-a146-a7f8bfe73f39/resourceGroups/yoferg/providers/Microsoft.Storage/storageAccounts/adlsyofe"
+		},
+		"EastAsiaTest_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
+			"value": "sqlyofe.database.windows.net"
+		},
+		"EastAsiaTest_properties_typeProperties_ssisProperties_customSetupScriptProperties_sasToken": {
+			"value": ""
+		},
+		"SSISIR_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
+			"value": "yofesql.database.windows.net"
+		},
+		"SSISIR_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminUserName": {
+			"value": "yofe"
+		},
+		"SSISIR_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
+			"value": ""
+		},
+		"SSISIR_properties_typeProperties_ssisProperties_customSetupScriptProperties_sasToken": {
+			"value": ""
+		},
+		"SSISIROnpremMigration_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
+			"value": "yofesqlmi.public.b59c6d36ff10.database.windows.net, 3342"
+		},
+		"SSISIROnpremMigration_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminUserName": {
+			"value": "yofe"
+		},
+		"SSISIROnpremMigration_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
+			"value": ""
+		},
+		"AzureBlobStorage579_properties_privateLinkResourceId": {
+			"value": "/subscriptions/d1e34e00-3965-4018-96a9-169755063128/resourceGroups/YOFERG/providers/Microsoft.Storage/storageAccounts/yofeblobacct"
+		},
+		"AzureBlobStorage579_properties_groupId": {
+			"value": "blob"
+		},
+		"AzureBlobStorage672_properties_privateLinkResourceId": {
+			"value": "/subscriptions/26c1fddb-1b8b-4755-a146-a7f8bfe73f39/resourceGroups/yoferg/providers/Microsoft.Storage/storageAccounts/blobyofe"
+		},
+		"AzureBlobStorage672_properties_groupId": {
+			"value": "blob"
+		},
+		"AzureBlobStorage672_properties_fqdns": {
+			"value": [
+				"blobyofe.blob.core.windows.net"
+			]
+		},
+		"AzureSqlDatabase504_properties_privateLinkResourceId": {
+			"value": "/subscriptions/26c1fddb-1b8b-4755-a146-a7f8bfe73f39/resourceGroups/yoferg/providers/Microsoft.Sql/servers/sqlyofe"
+		},
+		"AzureSqlDatabase504_properties_groupId": {
+			"value": "sqlServer"
+		},
+		"AzureSqlDatabase504_properties_fqdns": {
+			"value": [
+				"sqlyofe.database.windows.net"
+			]
+		},
+		"AzureSqlDatabase606_properties_privateLinkResourceId": {
+			"value": "/subscriptions/26c1fddb-1b8b-4755-a146-a7f8bfe73f39/resourceGroups/yoferg/providers/Microsoft.Sql/servers/yofesql"
+		},
+		"AzureSqlDatabase606_properties_groupId": {
+			"value": "sqlServer"
+		},
+		"AzureSqlDatabase606_properties_fqdns": {
+			"value": [
+				"yofesql.database.windows.net"
+			]
+		}
+	}
+}

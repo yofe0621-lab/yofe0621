@@ -1,0 +1,1516 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adfyofe"
+		},
+		"AzureSqlDatabase2_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase2'"
+		},
+		"AzureSqlDatabaseParam_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'AzureSqlDatabaseParam'"
+		},
+		"SnowflakeTrail_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SnowflakeTrail'"
+		},
+		"AzureDataLakeStorageVnet_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlsyofe.dfs.core.windows.net/"
+		},
+		"AzureSqlDatabaseParam_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "@{linkedService().hostname}"
+		},
+		"AzureSqlDatabaseParam_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "@{linkedService().dbname}"
+		},
+		"AzureSqlDatabaseParam_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "yofe"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/SnowflakeTableLegacy')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SnowflakeLegacy",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SnowflakeTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "test",
+					"table": "test"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SqlServerTable1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SqlServer1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "Test",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "SalesOrderDetail"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStorageVnet')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('AzureDataLakeStorageVnet_properties_typeProperties_url')]"
+				},
+				"connectVia": {
+					"referenceName": "mvnetirtest",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureSqlDatabase2_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "mvnetirtest",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabaseParam')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"hostname": {
+						"type": "string"
+					},
+					"dbname": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('AzureSqlDatabaseParam_properties_typeProperties_server')]",
+					"database": "[parameters('AzureSqlDatabaseParam_properties_typeProperties_database')]",
+					"encrypt": "optional",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('AzureSqlDatabaseParam_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('AzureSqlDatabaseParam_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "mvnetirtest",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SnowflakeTrail')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "Snowflake",
+				"typeProperties": {
+					"authenticationType": "Basic",
+					"connectionString": "[parameters('SnowflakeTrail_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntimesea",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DFHierarNS')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "BoolTestSrc",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "JsonHierarNS",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          {_c0} as string,",
+						"          Issuer as string,",
+						"          ISIN as string,",
+						"          {Book Port} as string,",
+						"          {HK PAR FUND ID} as boolean,",
+						"          {Mapping identifier} as string,",
+						"          {Pos (Disp)} as double,",
+						"          {Mkt Val} as integer,",
+						"          {MAPPED CSA BY ISIN V2} as string,",
+						"          {MAPPED CSA HC V2} as boolean,",
+						"          {Years to Mat} as boolean,",
+						"          {Amt Out} as string,",
+						"          {Cntry (Risk)} as string,",
+						"          Rank as string,",
+						"          {Moody's} as string,",
+						"          {S&P} as string,",
+						"          BCLASS4 as string,",
+						"          {CSA Min Rating Cat} as short,",
+						"          {CSA HC JPM V2} as boolean,",
+						"          {CSA HC GS V2} as boolean,",
+						"          {CSA HC HSBC V2} as boolean,",
+						"          {CSA HC SCB} as boolean,",
+						"          {CSA HC BOA V2} as boolean,",
+						"          {CSA HC CITI} as boolean,",
+						"          {CSA HC MS V2} as boolean,",
+						"          {CSA HC BNP} as boolean,",
+						"          {CSA HC SOCGEN} as boolean,",
+						"          {CSA HC CACIB} as boolean,",
+						"          {CSA HC DB V2} as boolean,",
+						"          {CSA HC Barc V2} as boolean,",
+						"          {COLL ACTION TYPE} as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     rowUrlColumn:'Book Port',",
+						"     truncate: true,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeltaLakeSrcTest')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"linkedService": {
+								"referenceName": "AzureDataLakeStorageDeltaLake",
+								"type": "LinkedServiceReference"
+							},
+							"name": "source2"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTableLH",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          ORG_ID as string,",
+						"          AUTHORITY_ID as string,",
+						"          ORG_PRIMARY_ID as string,",
+						"          PROVIDER_CODE as string,",
+						"          DATE_CREATED as timestamp,",
+						"          UNMAPPED_FLAG as string,",
+						"          UNMAPPED_DATE as timestamp,",
+						"          CREATED_BY as string,",
+						"          SYSTEM_ADM_STS_PERM_ID as string,",
+						"          SYSTEM_ADM_STS_REASON_PERM_ID as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet',",
+						"     fileSystem: 'test',",
+						"     folderPath: 'Lucas_DeltaLake_Test',",
+						"     fileName: 'part-00000-a576ad81-90b8-4f90-a566-e75cefe56294-c000.snappy.parquet') ~> source2",
+						"source2 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          countryOrRegion as string,",
+						"          holidayName as string,",
+						"          normalizeHolidayName as string,",
+						"          isPaidTimeOff as boolean,",
+						"          countryRegionCode as string,",
+						"          date as timestamp",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ErrorHandling')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DelimitedTextFaultTest",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AzureSynapseAnalyticsTableFaultTest",
+								"type": "DatasetReference"
+							},
+							"name": "sink1",
+							"rejectedDataLinkedService": {
+								"referenceName": "AzureBlobStorage1",
+								"type": "LinkedServiceReference"
+							}
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          col as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          id as integer,",
+						"          data as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     staged: true,",
+						"     allowCopyCommand: true,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'allErrors',",
+						"     outputRejectedData: true,",
+						"     transactionCommit: 'batch',",
+						"     reportSuccessOnError: false) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ParquetSrc')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ParquetSrc",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ParquetDest",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          registration_dttm as timestamp,",
+						"          id as integer,",
+						"          first_name as string,",
+						"          last_name as string,",
+						"          email as string,",
+						"          gender as string,",
+						"          ip_address as string,",
+						"          cc as string,",
+						"          country as string,",
+						"          birthdate as string,",
+						"          salary as double,",
+						"          title as string,",
+						"          comments as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> source1",
+						"source1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          registration_dttm as timestamp,",
+						"          id as integer,",
+						"          first_name as string,",
+						"          last_name as string,",
+						"          email as string,",
+						"          gender as string,",
+						"          ip_address as string,",
+						"          cc as string,",
+						"          country as string,",
+						"          birthdate as string,",
+						"          salary as double,",
+						"          title as string,",
+						"          comments as string",
+						"     ),",
+						"     format: 'parquet',",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SchemaTest')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "SchemaStagingADLS",
+								"type": "DatasetReference"
+							},
+							"name": "IncrementalData"
+						},
+						{
+							"linkedService": {
+								"referenceName": "AzureDataLakeStorageDeltaLake",
+								"type": "LinkedServiceReference"
+							},
+							"name": "ExistingData"
+						}
+					],
+					"sinks": [
+						{
+							"linkedService": {
+								"referenceName": "AzureDataLakeStorageDeltaLake",
+								"type": "LinkedServiceReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "AlterRow1"
+						},
+						{
+							"name": "join1"
+						},
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          ID as short,",
+						"          CALENDAR_DATE as string,",
+						"          CALENDAR_CCYY_NBR as double,",
+						"          CALENDAR_CCYYMM_NBR as double,",
+						"          CALENDAR_CCYYQ_NBR as double,",
+						"          CALENDAR_DATE_DESC as string,",
+						"          CALENDAR_MTH_BEG_DATE as string,",
+						"          CALENDAR_MTH_DAY_DESC as string,",
+						"          CALENDAR_MTH_DESC as string,",
+						"          CALENDAR_MTH_END_DATE as string,",
+						"          CALENDAR_QTR_BEG_DATE as string,",
+						"          CALENDAR_QTR_DESC as string,",
+						"          CALENDAR_QTR_END_DATE as string,",
+						"          CALENDAR_WEEK_BEG_DATE as string,",
+						"          CALENDAR_WEEK_DAY_DESC as string,",
+						"          CALENDAR_WEEK_DESC as string,",
+						"          CALENDAR_WEEK_END_DATE as string,",
+						"          CALENDAR_WEEK_NBR as double,",
+						"          CALENDAR_WEEK_NBR_MON_SUN as double,",
+						"          CALENDAR_YR_BEG_DATE as string,",
+						"          CALENDAR_YR_END_DATE as string,",
+						"          COMPLETED_QTR_IND as boolean,",
+						"          COMPLETED_WEEK_IND as boolean,",
+						"          COMPLETED_MTH_IND as boolean,",
+						"          COMPLETED_YR_IND as boolean,",
+						"          CURRENT_MTH_IND as boolean,",
+						"          CURRENT_QTR_IND as boolean,",
+						"          CURRENT_WEEK_IND as boolean,",
+						"          CURRENT_YR_IND as boolean",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> IncrementalData",
+						"source(output(",
+						"          CALENDAR_DATE as string,",
+						"          CALENDAR_CCYY_NBR as string,",
+						"          CALENDAR_CCYYMM_NBR as string,",
+						"          CALENDAR_CCYYQ_NBR as string,",
+						"          CALENDAR_DATE_DESC as string,",
+						"          CALENDAR_MTH_BEG_DATE as string,",
+						"          CALENDAR_MTH_DAY_DESC as string,",
+						"          CALENDAR_MTH_DESC as string,",
+						"          CALENDAR_MTH_END_DATE as string,",
+						"          CALENDAR_QTR_BEG_DATE as string,",
+						"          CALENDAR_QTR_DESC as string,",
+						"          CALENDAR_QTR_END_DATE as string,",
+						"          CALENDAR_WEEK_BEG_DATE as string,",
+						"          CALENDAR_WEEK_DAY_DESC as string,",
+						"          CALENDAR_WEEK_DESC as string,",
+						"          CALENDAR_WEEK_END_DATE as string,",
+						"          CALENDAR_WEEK_NBR as string,",
+						"          CALENDAR_WEEK_NBR_MON_SUN as string,",
+						"          CALENDAR_YR_BEG_DATE as string,",
+						"          CALENDAR_YR_END_DATE as string,",
+						"          COMPLETED_QTR_IND as string,",
+						"          COMPLETED_WEEK_IND as string,",
+						"          COMPLETED_MTH_IND as string,",
+						"          COMPLETED_YR_IND as string,",
+						"          CURRENT_MTH_IND as string,",
+						"          CURRENT_QTR_IND as string,",
+						"          CURRENT_WEEK_IND as string,",
+						"          CURRENT_YR_IND as string,",
+						"          CURR_LAST_COMPLETED_MTH_IND as string,",
+						"          CURR_LAST2_COMPLETED_MTH_IND as string,",
+						"          LAST_COMPLETED_12_MTH_IND as string,",
+						"          LAST_COMPLETED_30_DAY_IND as string,",
+						"          LAST_COMPLETED_DAY_IND as string,",
+						"          LAST_COMPLETED_MTH_IND as string,",
+						"          LAST_COMPLETED_QTR_IND as string,",
+						"          LAST_COMPLETED_WEEK_IND as string,",
+						"          LAST_COMPLETED_YR_IND as string,",
+						"          ID as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'delta',",
+						"     fileSystem: 'test',",
+						"     folderPath: 'synapsedelta') ~> ExistingData",
+						"join1 alterRow(insertIf(isNull(ExistingData@ID)),",
+						"     updateIf(!isNull(ExistingData@ID))) ~> AlterRow1",
+						"derivedColumn1, ExistingData join(toString(derivedColumn1@ID) == ExistingData@ID,",
+						"     joinType:'left',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> join1",
+						"IncrementalData derive(ID = toInteger(byName('ID')),",
+						"          CALENDAR_DATE = toTimestamp(byName('CALENDAR_DATE')),",
+						"          CALENDAR_CCYY_NBR = toDecimal(byName('CALENDAR_CCYY_NBR'),38,18),",
+						"          CALENDAR_CCYYMM_NBR = toDecimal(byName('CALENDAR_CCYYMM_NBR'),38,18),",
+						"          CALENDAR_CCYYQ_NBR = toDecimal(byName('CALENDAR_CCYYQ_NBR'),38,18),",
+						"          CALENDAR_DATE_DESC = toString(byName('CALENDAR_DATE_DESC')),",
+						"          CALENDAR_MTH_BEG_DATE = toTimestamp(byName('CALENDAR_MTH_BEG_DATE')),",
+						"          CALENDAR_MTH_DAY_DESC = toString(byName('CALENDAR_MTH_DAY_DESC')),",
+						"          CALENDAR_MTH_DESC = toString(byName('CALENDAR_MTH_DESC')),",
+						"          CALENDAR_MTH_END_DATE = toTimestamp(byName('CALENDAR_MTH_END_DATE')),",
+						"          CALENDAR_QTR_BEG_DATE = toTimestamp(byName('CALENDAR_QTR_BEG_DATE')),",
+						"          CALENDAR_QTR_DESC = toString(byName('CALENDAR_QTR_DESC')),",
+						"          CALENDAR_QTR_END_DATE = toTimestamp(byName('CALENDAR_QTR_END_DATE')),",
+						"          CALENDAR_WEEK_BEG_DATE = toTimestamp(byName('CALENDAR_WEEK_BEG_DATE')),",
+						"          CALENDAR_WEEK_DAY_DESC = toString(byName('CALENDAR_WEEK_DAY_DESC')),",
+						"          CALENDAR_WEEK_DESC = toString(byName('CALENDAR_WEEK_DESC')),",
+						"          CALENDAR_WEEK_END_DATE = toTimestamp(byName('CALENDAR_WEEK_END_DATE')),",
+						"          CALENDAR_WEEK_NBR = toDecimal(byName('CALENDAR_WEEK_NBR'),38,18),",
+						"          CALENDAR_WEEK_NBR_MON_SUN = toDecimal(byName('CALENDAR_WEEK_NBR_MON_SUN'),38,18),",
+						"          CALENDAR_YR_BEG_DATE = toTimestamp(byName('CALENDAR_YR_BEG_DATE')),",
+						"          CALENDAR_YR_END_DATE = toTimestamp(byName('CALENDAR_YR_END_DATE')),",
+						"          COMPLETED_QTR_IND = toString(byName('COMPLETED_QTR_IND')),",
+						"          COMPLETED_WEEK_IND = toString(byName('COMPLETED_WEEK_IND')),",
+						"          COMPLETED_MTH_IND = toString(byName('COMPLETED_MTH_IND')),",
+						"          COMPLETED_YR_IND = toString(byName('COMPLETED_YR_IND')),",
+						"          CURRENT_MTH_IND = toString(byName('CURRENT_MTH_IND')),",
+						"          CURRENT_QTR_IND = toString(byName('CURRENT_QTR_IND')),",
+						"          CURRENT_WEEK_IND = toString(byName('CURRENT_WEEK_IND')),",
+						"          CURRENT_YR_IND = toString(byName('CURRENT_YR_IND')),",
+						"          CURR_LAST_COMPLETED_MTH_IND = toString(byName('CURR_LAST_COMPLETED_MTH_IND')),",
+						"          CURR_LAST2_COMPLETED_MTH_IND = toString(byName('CURR_LAST2_COMPLETED_MTH_IND')),",
+						"          LAST_COMPLETED_12_MTH_IND = toString(byName('LAST_COMPLETED_12_MTH_IND')),",
+						"          LAST_COMPLETED_30_DAY_IND = toString(byName('LAST_COMPLETED_30_DAY_IND')),",
+						"          LAST_COMPLETED_DAY_IND = toString(byName('LAST_COMPLETED_DAY_IND')),",
+						"          LAST_COMPLETED_MTH_IND = toString(byName('LAST_COMPLETED_MTH_IND')),",
+						"          LAST_COMPLETED_QTR_IND = toString(byName('LAST_COMPLETED_QTR_IND')),",
+						"          LAST_COMPLETED_WEEK_IND = toString(byName('LAST_COMPLETED_WEEK_IND')),",
+						"          LAST_COMPLETED_YR_IND = toString(byName('LAST_COMPLETED_YR_IND'))) ~> derivedColumn1",
+						"AlterRow1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'delta',",
+						"     fileSystem: 'test',",
+						"     folderPath: 'synapsedelta',",
+						"     mergeSchema: true,",
+						"     autoCompact: false,",
+						"     optimizedWrite: false,",
+						"     vacuum: 0,",
+						"     deletable: false,",
+						"     insertable: true,",
+						"     updateable: true,",
+						"     upsertable: false,",
+						"     keys:['ID'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          ID = derivedColumn1@ID,",
+						"          CALENDAR_DATE = derivedColumn1@CALENDAR_DATE,",
+						"          CALENDAR_CCYY_NBR = derivedColumn1@CALENDAR_CCYY_NBR,",
+						"          CALENDAR_CCYYMM_NBR = derivedColumn1@CALENDAR_CCYYMM_NBR,",
+						"          CALENDAR_CCYYQ_NBR = derivedColumn1@CALENDAR_CCYYQ_NBR,",
+						"          CALENDAR_DATE_DESC = derivedColumn1@CALENDAR_DATE_DESC,",
+						"          CALENDAR_MTH_BEG_DATE = derivedColumn1@CALENDAR_MTH_BEG_DATE,",
+						"          CALENDAR_MTH_DAY_DESC = derivedColumn1@CALENDAR_MTH_DAY_DESC,",
+						"          CALENDAR_MTH_DESC = derivedColumn1@CALENDAR_MTH_DESC,",
+						"          CALENDAR_MTH_END_DATE = derivedColumn1@CALENDAR_MTH_END_DATE,",
+						"          CALENDAR_QTR_BEG_DATE = derivedColumn1@CALENDAR_QTR_BEG_DATE,",
+						"          CALENDAR_QTR_DESC = derivedColumn1@CALENDAR_QTR_DESC,",
+						"          CALENDAR_QTR_END_DATE = derivedColumn1@CALENDAR_QTR_END_DATE,",
+						"          CALENDAR_WEEK_BEG_DATE = derivedColumn1@CALENDAR_WEEK_BEG_DATE,",
+						"          CALENDAR_WEEK_DAY_DESC = derivedColumn1@CALENDAR_WEEK_DAY_DESC,",
+						"          CALENDAR_WEEK_DESC = derivedColumn1@CALENDAR_WEEK_DESC,",
+						"          CALENDAR_WEEK_END_DATE = derivedColumn1@CALENDAR_WEEK_END_DATE,",
+						"          CALENDAR_WEEK_NBR = derivedColumn1@CALENDAR_WEEK_NBR,",
+						"          CALENDAR_WEEK_NBR_MON_SUN = derivedColumn1@CALENDAR_WEEK_NBR_MON_SUN,",
+						"          CALENDAR_YR_BEG_DATE = derivedColumn1@CALENDAR_YR_BEG_DATE,",
+						"          CALENDAR_YR_END_DATE = derivedColumn1@CALENDAR_YR_END_DATE,",
+						"          COMPLETED_QTR_IND = derivedColumn1@COMPLETED_QTR_IND,",
+						"          COMPLETED_WEEK_IND = derivedColumn1@COMPLETED_WEEK_IND,",
+						"          COMPLETED_MTH_IND = derivedColumn1@COMPLETED_MTH_IND,",
+						"          COMPLETED_YR_IND = derivedColumn1@COMPLETED_YR_IND,",
+						"          CURRENT_MTH_IND = derivedColumn1@CURRENT_MTH_IND,",
+						"          CURRENT_QTR_IND = derivedColumn1@CURRENT_QTR_IND,",
+						"          CURRENT_WEEK_IND = derivedColumn1@CURRENT_WEEK_IND,",
+						"          CURRENT_YR_IND = derivedColumn1@CURRENT_YR_IND,",
+						"          CURR_LAST_COMPLETED_MTH_IND = derivedColumn1@CURR_LAST_COMPLETED_MTH_IND,",
+						"          CURR_LAST2_COMPLETED_MTH_IND = derivedColumn1@CURR_LAST2_COMPLETED_MTH_IND,",
+						"          LAST_COMPLETED_12_MTH_IND = derivedColumn1@LAST_COMPLETED_12_MTH_IND,",
+						"          LAST_COMPLETED_30_DAY_IND = derivedColumn1@LAST_COMPLETED_30_DAY_IND,",
+						"          LAST_COMPLETED_DAY_IND = derivedColumn1@LAST_COMPLETED_DAY_IND,",
+						"          LAST_COMPLETED_MTH_IND = derivedColumn1@LAST_COMPLETED_MTH_IND,",
+						"          LAST_COMPLETED_QTR_IND = derivedColumn1@LAST_COMPLETED_QTR_IND,",
+						"          LAST_COMPLETED_WEEK_IND = derivedColumn1@LAST_COMPLETED_WEEK_IND,",
+						"          LAST_COMPLETED_YR_IND = derivedColumn1@LAST_COMPLETED_YR_IND",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SchemaTest_Str')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "SchemaStagingADLS",
+								"type": "DatasetReference"
+							},
+							"name": "IncrementalData"
+						},
+						{
+							"linkedService": {
+								"referenceName": "AzureDataLakeStorageDeltaLake",
+								"type": "LinkedServiceReference"
+							},
+							"name": "ExistingData"
+						}
+					],
+					"sinks": [
+						{
+							"linkedService": {
+								"referenceName": "AzureDataLakeStorageDeltaLake",
+								"type": "LinkedServiceReference"
+							},
+							"name": "sink2"
+						}
+					],
+					"transformations": [
+						{
+							"name": "join1"
+						},
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "Update"
+						},
+						{
+							"name": "select1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          ID as string,",
+						"          CALENDAR_DATE as string,",
+						"          CALENDAR_CCYY_NBR as string,",
+						"          CALENDAR_CCYYMM_NBR as string,",
+						"          CALENDAR_CCYYQ_NBR as string,",
+						"          CALENDAR_DATE_DESC as string,",
+						"          CALENDAR_MTH_BEG_DATE as string,",
+						"          CALENDAR_MTH_DAY_DESC as string,",
+						"          CALENDAR_MTH_DESC as string,",
+						"          CALENDAR_MTH_END_DATE as string,",
+						"          CALENDAR_QTR_BEG_DATE as string,",
+						"          CALENDAR_QTR_DESC as string,",
+						"          CALENDAR_QTR_END_DATE as string,",
+						"          CALENDAR_WEEK_BEG_DATE as string,",
+						"          CALENDAR_WEEK_DAY_DESC as string,",
+						"          CALENDAR_WEEK_DESC as string,",
+						"          CALENDAR_WEEK_END_DATE as string,",
+						"          CALENDAR_WEEK_NBR as string,",
+						"          CALENDAR_WEEK_NBR_MON_SUN as string,",
+						"          CALENDAR_YR_BEG_DATE as string,",
+						"          CALENDAR_YR_END_DATE as string,",
+						"          COMPLETED_QTR_IND as string,",
+						"          COMPLETED_WEEK_IND as string,",
+						"          COMPLETED_MTH_IND as string,",
+						"          COMPLETED_YR_IND as string,",
+						"          CURRENT_MTH_IND as string,",
+						"          CURRENT_QTR_IND as string,",
+						"          CURRENT_WEEK_IND as string,",
+						"          CURRENT_YR_IND as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> IncrementalData",
+						"source(output(",
+						"          CALENDAR_DATE as string,",
+						"          CALENDAR_CCYY_NBR as string,",
+						"          CALENDAR_CCYYMM_NBR as string,",
+						"          CALENDAR_CCYYQ_NBR as string,",
+						"          CALENDAR_DATE_DESC as string,",
+						"          CALENDAR_MTH_BEG_DATE as string,",
+						"          CALENDAR_MTH_DAY_DESC as string,",
+						"          CALENDAR_MTH_DESC as string,",
+						"          CALENDAR_MTH_END_DATE as string,",
+						"          CALENDAR_QTR_BEG_DATE as string,",
+						"          CALENDAR_QTR_DESC as string,",
+						"          CALENDAR_QTR_END_DATE as string,",
+						"          CALENDAR_WEEK_BEG_DATE as string,",
+						"          CALENDAR_WEEK_DAY_DESC as string,",
+						"          CALENDAR_WEEK_DESC as string,",
+						"          CALENDAR_WEEK_END_DATE as string,",
+						"          CALENDAR_WEEK_NBR as string,",
+						"          CALENDAR_WEEK_NBR_MON_SUN as string,",
+						"          CALENDAR_YR_BEG_DATE as string,",
+						"          CALENDAR_YR_END_DATE as string,",
+						"          COMPLETED_QTR_IND as string,",
+						"          COMPLETED_WEEK_IND as string,",
+						"          COMPLETED_MTH_IND as string,",
+						"          COMPLETED_YR_IND as string,",
+						"          CURRENT_MTH_IND as string,",
+						"          CURRENT_QTR_IND as string,",
+						"          CURRENT_WEEK_IND as string,",
+						"          CURRENT_YR_IND as string,",
+						"          CURR_LAST_COMPLETED_MTH_IND as string,",
+						"          CURR_LAST2_COMPLETED_MTH_IND as string,",
+						"          LAST_COMPLETED_12_MTH_IND as string,",
+						"          LAST_COMPLETED_30_DAY_IND as string,",
+						"          LAST_COMPLETED_DAY_IND as string,",
+						"          LAST_COMPLETED_MTH_IND as string,",
+						"          LAST_COMPLETED_QTR_IND as string,",
+						"          LAST_COMPLETED_WEEK_IND as string,",
+						"          LAST_COMPLETED_YR_IND as string,",
+						"          ID as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'delta',",
+						"     fileSystem: 'test',",
+						"     folderPath: 'synapsedelta') ~> ExistingData",
+						"derivedColumn1, select1 join(ID == ExistingID,",
+						"     joinType:'left',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> join1",
+						"IncrementalData derive(ID = toString(byName('ID')),",
+						"          CALENDAR_DATE = toString(byName('CALENDAR_DATE')),",
+						"          CALENDAR_CCYY_NBR = toString(byName('CALENDAR_CCYY_NBR')),",
+						"          CALENDAR_CCYYMM_NBR = toString(byName('CALENDAR_CCYYMM_NBR')),",
+						"          CALENDAR_CCYYQ_NBR = toString(byName('CALENDAR_CCYYQ_NBR')),",
+						"          CALENDAR_DATE_DESC = toString(byName('CALENDAR_DATE_DESC')),",
+						"          CALENDAR_MTH_BEG_DATE = toString(byName('CALENDAR_MTH_BEG_DATE')),",
+						"          CALENDAR_MTH_DAY_DESC = toString(byName('CALENDAR_MTH_DAY_DESC')),",
+						"          CALENDAR_MTH_DESC = toString(byName('CALENDAR_MTH_DESC')),",
+						"          CALENDAR_MTH_END_DATE = toString(byName('CALENDAR_MTH_END_DATE')),",
+						"          CALENDAR_QTR_BEG_DATE = toString(byName('CALENDAR_QTR_BEG_DATE')),",
+						"          CALENDAR_QTR_DESC = toString(byName('CALENDAR_QTR_DESC')),",
+						"          CALENDAR_QTR_END_DATE = toString(byName('CALENDAR_QTR_END_DATE')),",
+						"          CALENDAR_WEEK_BEG_DATE = toString(byName('CALENDAR_WEEK_BEG_DATE')),",
+						"          CALENDAR_WEEK_DAY_DESC = toString(byName('CALENDAR_WEEK_DAY_DESC')),",
+						"          CALENDAR_WEEK_DESC = toString(byName('CALENDAR_WEEK_DESC')),",
+						"          CALENDAR_WEEK_END_DATE = toString(byName('CALENDAR_WEEK_END_DATE')),",
+						"          CALENDAR_WEEK_NBR = toString(byName('CALENDAR_WEEK_NBR')),",
+						"          CALENDAR_WEEK_NBR_MON_SUN = toString(byName('CALENDAR_WEEK_NBR_MON_SUN')),",
+						"          CALENDAR_YR_BEG_DATE = toString(byName('CALENDAR_YR_BEG_DATE')),",
+						"          CALENDAR_YR_END_DATE = toString(byName('CALENDAR_YR_END_DATE')),",
+						"          COMPLETED_QTR_IND = toString(byName('COMPLETED_QTR_IND')),",
+						"          COMPLETED_WEEK_IND = toString(byName('COMPLETED_WEEK_IND')),",
+						"          COMPLETED_MTH_IND = toString(byName('COMPLETED_MTH_IND')),",
+						"          COMPLETED_YR_IND = toString(byName('COMPLETED_YR_IND')),",
+						"          CURRENT_MTH_IND = toString(byName('CURRENT_MTH_IND')),",
+						"          CURRENT_QTR_IND = toString(byName('CURRENT_QTR_IND')),",
+						"          CURRENT_WEEK_IND = toString(byName('CURRENT_WEEK_IND')),",
+						"          CURRENT_YR_IND = toString(byName('CURRENT_YR_IND')),",
+						"          CURR_LAST_COMPLETED_MTH_IND = toString(byName('CURR_LAST_COMPLETED_MTH_IND')),",
+						"          CURR_LAST2_COMPLETED_MTH_IND = toString(byName('CURR_LAST2_COMPLETED_MTH_IND')),",
+						"          LAST_COMPLETED_12_MTH_IND = toString(byName('LAST_COMPLETED_12_MTH_IND')),",
+						"          LAST_COMPLETED_30_DAY_IND = toString(byName('LAST_COMPLETED_30_DAY_IND')),",
+						"          LAST_COMPLETED_DAY_IND = toString(byName('LAST_COMPLETED_DAY_IND')),",
+						"          LAST_COMPLETED_MTH_IND = toString(byName('LAST_COMPLETED_MTH_IND')),",
+						"          LAST_COMPLETED_QTR_IND = toString(byName('LAST_COMPLETED_QTR_IND')),",
+						"          LAST_COMPLETED_WEEK_IND = toString(byName('LAST_COMPLETED_WEEK_IND')),",
+						"          LAST_COMPLETED_YR_IND = toString(byName('LAST_COMPLETED_YR_IND'))) ~> derivedColumn1",
+						"join1 alterRow(updateIf(!isNull(ExistingID)),",
+						"     insertIf(isNull(ExistingID))) ~> Update",
+						"ExistingData select(mapColumn(",
+						"          ExistingID = ID",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"Update sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'delta',",
+						"     fileSystem: 'test',",
+						"     folderPath: 'synapsedelta',",
+						"     mergeSchema: false,",
+						"     autoCompact: false,",
+						"     optimizedWrite: false,",
+						"     vacuum: 0,",
+						"     deletable: false,",
+						"     insertable: true,",
+						"     updateable: true,",
+						"     upsertable: false,",
+						"     keys:['ID'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          ID,",
+						"          CALENDAR_DATE,",
+						"          CALENDAR_CCYY_NBR,",
+						"          CALENDAR_CCYYMM_NBR,",
+						"          CALENDAR_CCYYQ_NBR,",
+						"          CALENDAR_DATE_DESC,",
+						"          CALENDAR_MTH_BEG_DATE,",
+						"          CALENDAR_MTH_DAY_DESC,",
+						"          CALENDAR_MTH_DESC,",
+						"          CALENDAR_MTH_END_DATE,",
+						"          CALENDAR_QTR_BEG_DATE,",
+						"          CALENDAR_QTR_DESC,",
+						"          CALENDAR_QTR_END_DATE,",
+						"          CALENDAR_WEEK_BEG_DATE,",
+						"          CALENDAR_WEEK_DAY_DESC,",
+						"          CALENDAR_WEEK_DESC,",
+						"          CALENDAR_WEEK_END_DATE,",
+						"          CALENDAR_WEEK_NBR,",
+						"          CALENDAR_WEEK_NBR_MON_SUN,",
+						"          CALENDAR_YR_BEG_DATE,",
+						"          CALENDAR_YR_END_DATE,",
+						"          COMPLETED_QTR_IND,",
+						"          COMPLETED_WEEK_IND,",
+						"          COMPLETED_MTH_IND,",
+						"          COMPLETED_YR_IND,",
+						"          CURRENT_MTH_IND,",
+						"          CURRENT_QTR_IND,",
+						"          CURRENT_WEEK_IND,",
+						"          CURRENT_YR_IND,",
+						"          CURR_LAST_COMPLETED_MTH_IND,",
+						"          CURR_LAST2_COMPLETED_MTH_IND,",
+						"          LAST_COMPLETED_12_MTH_IND,",
+						"          LAST_COMPLETED_30_DAY_IND,",
+						"          LAST_COMPLETED_DAY_IND,",
+						"          LAST_COMPLETED_MTH_IND,",
+						"          LAST_COMPLETED_QTR_IND,",
+						"          LAST_COMPLETED_WEEK_IND,",
+						"          LAST_COMPLETED_YR_IND",
+						"     )) ~> sink2"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SchemaTest_full')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "SchemaStagingADLS",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"linkedService": {
+								"referenceName": "AzureDataLakeStorageDeltaLake",
+								"type": "LinkedServiceReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          ID as string,",
+						"          CALENDAR_DATE as string,",
+						"          CALENDAR_CCYY_NBR as string,",
+						"          CALENDAR_CCYYMM_NBR as string,",
+						"          CALENDAR_CCYYQ_NBR as string,",
+						"          CALENDAR_DATE_DESC as string,",
+						"          CALENDAR_MTH_BEG_DATE as string,",
+						"          CALENDAR_MTH_DAY_DESC as string,",
+						"          CALENDAR_MTH_DESC as string,",
+						"          CALENDAR_MTH_END_DATE as string,",
+						"          CALENDAR_QTR_BEG_DATE as string,",
+						"          CALENDAR_QTR_DESC as string,",
+						"          CALENDAR_QTR_END_DATE as string,",
+						"          CALENDAR_WEEK_BEG_DATE as string,",
+						"          CALENDAR_WEEK_DAY_DESC as string,",
+						"          CALENDAR_WEEK_DESC as string,",
+						"          CALENDAR_WEEK_END_DATE as string,",
+						"          CALENDAR_WEEK_NBR as string,",
+						"          CALENDAR_WEEK_NBR_MON_SUN as string,",
+						"          CALENDAR_YR_BEG_DATE as string,",
+						"          CALENDAR_YR_END_DATE as string,",
+						"          COMPLETED_QTR_IND as string,",
+						"          COMPLETED_WEEK_IND as string,",
+						"          COMPLETED_MTH_IND as string,",
+						"          COMPLETED_YR_IND as string,",
+						"          CURRENT_MTH_IND as string,",
+						"          CURRENT_QTR_IND as string,",
+						"          CURRENT_WEEK_IND as string,",
+						"          CURRENT_YR_IND as string,",
+						"          CURR_LAST_COMPLETED_MTH_IND as string,",
+						"          CURR_LAST2_COMPLETED_MTH_IND as string,",
+						"          LAST_COMPLETED_12_MTH_IND as string,",
+						"          LAST_COMPLETED_30_DAY_IND as string,",
+						"          LAST_COMPLETED_DAY_IND as string,",
+						"          LAST_COMPLETED_MTH_IND as string,",
+						"          LAST_COMPLETED_QTR_IND as string,",
+						"          LAST_COMPLETED_WEEK_IND as string,",
+						"          LAST_COMPLETED_YR_IND as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'delta',",
+						"     fileSystem: 'test',",
+						"     folderPath: 'synapsedelta',",
+						"     mergeSchema: false,",
+						"     autoCompact: false,",
+						"     optimizedWrite: false,",
+						"     vacuum: 0,",
+						"     deletable: false,",
+						"     insertable: true,",
+						"     updateable: false,",
+						"     upsertable: false,",
+						"     keys:['ID'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflowLHSQLSrc')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTableLH",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"linkedService": {
+								"referenceName": "AzureBlobStorage1",
+								"type": "LinkedServiceReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"parameters{",
+						"     foldername as string",
+						"}",
+						"source(output(",
+						"          countryOrRegion as string,",
+						"          holidayName as string,",
+						"          normalizeHolidayName as string,",
+						"          isPaidTimeOff as boolean,",
+						"          countryRegionCode as string,",
+						"          date as timestamp,",
+						"          datestring as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     query: (\"select * from [dbo].[publicholidays] where replace(substring(convert(varchar(30), date),1,10),'-','') = '\" + $foldername + \"'\"),",
+						"     format: 'query') ~> source1",
+						"source1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'delimited',",
+						"     fileSystem: 'sqlsrctestperf',",
+						"     folderPath: ($foldername),",
+						"     columnDelimiter: ',',",
+						"     escapeChar: '\\\\',",
+						"     quoteChar: '\\\"',",
+						"     columnNamesAsHeader: false,",
+						"     partitionFileNames:[($foldername + '.csv')],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflowLHSrc')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "LakehouseTable1",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DelimitedText1",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          countryOrRegion as string,",
+						"          holidayName as string,",
+						"          normalizeHolidayName as string,",
+						"          isPaidTimeOff as boolean,",
+						"          countryRegionCode as string,",
+						"          date as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false) ~> source1",
+						"source1 derive(datestring = toString(date,'yyyyMMdd')) ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     rowFolderUrlColumn:'datestring',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CopySHIR')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "AzureSqlTableSHIR",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AzureSqlTableSHIR",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-10-16T01:54:35Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FaultToleranceTest')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlDWSink",
+								"allowCopyCommand": true,
+								"copyCommandSettings": {}
+							},
+							"enableStaging": false,
+							"enableSkipIncompatibleRow": false
+						},
+						"inputs": [
+							{
+								"referenceName": "DelimitedTextFaultTest",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AzureSynapseAnalyticsTableFaultTest",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "ErrorHandling",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "AzureBlobStorage1",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "synapse"
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Copy data single col",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "select col1 from dbo.SingleCol order by ID",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "AzureSynapseAnalyticsTable1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DelimitedTextSinglecol",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2026-03-04T07:22:29Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/ErrorHandling')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/HierarchyNamespace')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DFHierarNS",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2026-03-26T07:20:53Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DFHierarNS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/InformixTest')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "InformixSource"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "InformixSrc",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "InformixDest",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2026-03-12T07:47:41Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LakehouseDF')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflowLHSrc",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "dataflowttl",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-02-14T07:17:49Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/dataflowLHSrc')]"
+			]
+		}
+	]
+}

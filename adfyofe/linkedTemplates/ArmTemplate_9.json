@@ -1,0 +1,1988 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adfyofe"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/PartitionTestSrc')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Name",
+						"type": "nchar"
+					}
+				],
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/optionsetdest')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "EntityName",
+						"type": "varchar"
+					},
+					{
+						"name": "OptionSetName",
+						"type": "varchar"
+					},
+					{
+						"name": "Option",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "IsUserLocalizedLabel",
+						"type": "bit"
+					},
+					{
+						"name": "LocalizedLabelLanguageCode",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "LocalizedLabel",
+						"type": "varchar"
+					},
+					{
+						"name": "GlobalOptionSetName",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "optionsetmetadata"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DataverseCDMToSQL_doubleinterval')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Data flow which reads CDM entity, transforms the data and move the data to destination SQL DB",
+				"folder": {
+					"name": "DataverseToSQL"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"linkedService": {
+								"referenceName": "AzureDataLakeStorage1",
+								"type": "LinkedServiceReference"
+							},
+							"name": "currentfolder"
+						},
+						{
+							"linkedService": {
+								"referenceName": "AzureSqlDatabase2",
+								"type": "LinkedServiceReference"
+							},
+							"name": "selectmaxversion"
+						},
+						{
+							"linkedService": {
+								"referenceName": "AzureDataLakeStorage1",
+								"type": "LinkedServiceReference"
+							},
+							"name": "previousfolder"
+						}
+					],
+					"sinks": [
+						{
+							"linkedService": {
+								"referenceName": "AzureSqlDatabase2",
+								"type": "LinkedServiceReference"
+							},
+							"name": "AzureSQLDB"
+						},
+						{
+							"linkedService": {
+								"referenceName": "AzureSqlDatabase2",
+								"type": "LinkedServiceReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "IdentifyColumns"
+						},
+						{
+							"name": "AlterRow"
+						},
+						{
+							"name": "Rank"
+						},
+						{
+							"name": "Dedup"
+						},
+						{
+							"name": "FilterFolders"
+						},
+						{
+							"name": "FilterDeletedRows"
+						},
+						{
+							"name": "AddEntityName"
+						},
+						{
+							"name": "SelectDeleteLogColumns"
+						},
+						{
+							"name": "FilterMaxVersion"
+						},
+						{
+							"name": "union1"
+						}
+					],
+					"scriptLines": [
+						"parameters{",
+						"     dbschema as string (\"dbo\"),",
+						"     prefix as string,",
+						"     entity as string (\"custgroup\"),",
+						"     prefolder as string,",
+						"     container as string,",
+						"     folder as string",
+						"}",
+						"source(useSchema: false,",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: true,",
+						"     entity: 'custgroup',",
+						"     format: 'cdm',",
+						"     manifestType: 'model',",
+						"     folderPath: '2025-06-17T08.05.26Z',",
+						"     fileSystem: 'dataverse-adache3-unq',",
+						"     timestampFormats: ['MM/dd/yyyy hh:mm:ss a','MM-dd-yyyy hh:mm:ss a','yyyy.MM.dd hh:mm:ss a','yyyy-MM-dd\\'T\\'HH:mm:ss\\'Z\\'','yyyy-MM-dd\\'T\\'HH:mm:ss.SSS\\'Z\\'','yyyy-MM-dd\\'T\\'HH:mm:ss']) ~> currentfolder",
+						"source(output(",
+						"          maxversion as long,",
+						"          maxmodified as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'query',",
+						"     store: 'sqlserver',",
+						"     query: (\"SELECT premaxversion AS maxversion FROM \" + $dbschema + \".\" + $prefix + \"DataverseToSQLVerionLog WHERE Entity = '\" + $entity + \"'\"),",
+						"     isolationLevel: 'READ_UNCOMMITTED') ~> selectmaxversion",
+						"source(output(",
+						"          Id as string,",
+						"          SinkCreatedOn as timestamp,",
+						"          SinkModifiedOn as timestamp,",
+						"          priceincludesalestax as long,",
+						"          ispublicsector_it as long,",
+						"          sysdatastatecode as long,",
+						"          bankcustpaymidtable as long,",
+						"          clearingperiod as string,",
+						"          custgroup as string,",
+						"          defaultdimension as long,",
+						"          name as string,",
+						"          paymtermid as string,",
+						"          taxgroupid as string,",
+						"          taxperiodpaymentcode_pl as string,",
+						"          custwriteoffrefrecid as long,",
+						"          custaccountnumseq as long,",
+						"          accountingcurrencyexchangeratetype as long,",
+						"          reportingcurrencyexchangeratetype as long,",
+						"          modifieddatetime as timestamp,",
+						"          modifiedby as string,",
+						"          modifiedtransactionid as long,",
+						"          createddatetime as timestamp,",
+						"          createdby as string,",
+						"          createdtransactionid as long,",
+						"          dataareaid as string,",
+						"          recversion as long,",
+						"          partition as long,",
+						"          sysrowversion as long,",
+						"          recid as long,",
+						"          tableid as long,",
+						"          versionnumber as long,",
+						"          createdon as string,",
+						"          modifiedon as timestamp,",
+						"          IsDelete as boolean",
+						"     ),",
+						"     useSchema: false,",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     entity: 'custgroup',",
+						"     format: 'cdm',",
+						"     manifestType: 'model',",
+						"     folderPath: ($prefolder),",
+						"     fileSystem: ($container)) ~> previousfolder",
+						"union1 derive(Id = toString(byName(\"Id\")),",
+						"          versionnumber = toLong(byName(\"versionnumber\")),",
+						"          IsDelete = toBoolean(byName(\"IsDelete\"))) ~> IdentifyColumns",
+						"FilterMaxVersion alterRow(deleteIf(IsDelete==true()),",
+						"     upsertIf(isNull(IsDelete)||IsDelete==false())) ~> AlterRow",
+						"IdentifyColumns window(over(Id),",
+						"     desc(Id, false),",
+						"     desc(versionnumber, false),",
+						"     desc(SinkModifiedOn, false),",
+						"     {_RowVersion} = denseRank()) ~> Rank",
+						"Rank filter(toLong(byName(\"_RowVersion\"))==1) ~> Dedup",
+						"Dedup, selectmaxversion join(versionnumber > maxversion,",
+						"     joinType:'left',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'right')~> FilterFolders",
+						"FilterMaxVersion filter(IsDelete==true()) ~> FilterDeletedRows",
+						"FilterDeletedRows derive(EntityName = \"generaljournalentry\") ~> AddEntityName",
+						"AddEntityName select(mapColumn(",
+						"          EntityName,",
+						"          RecordId = Id,",
+						"          SinkDeleteTime = SinkModifiedOn,",
+						"          VersionNumber = versionnumber",
+						"     ),",
+						"     skipDuplicateMapInputs: false,",
+						"     skipDuplicateMapOutputs: true) ~> SelectDeleteLogColumns",
+						"FilterFolders filter(versionnumber>toLong(maxversion)) ~> FilterMaxVersion",
+						"currentfolder, previousfolder union(byName: true)~> union1",
+						"AlterRow sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'table',",
+						"     store: 'sqlserver',",
+						"     schemaName: 'dbo',",
+						"     tableName: 'custgroup',",
+						"     insertable: true,",
+						"     updateable: false,",
+						"     deletable: true,",
+						"     upsertable: true,",
+						"     keys:['Id'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> AzureSQLDB",
+						"SelectDeleteLogColumns sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'table',",
+						"     store: 'sqlserver',",
+						"     schemaName: 'dbo',",
+						"     tableName: 'DeleteLog',",
+						"     insertable: true,",
+						"     updateable: false,",
+						"     deletable: false,",
+						"     upsertable: false,",
+						"     recreate: true,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DataverseCDMToSQL_join')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Data flow which reads CDM entity, transforms the data and move the data to destination SQL DB",
+				"folder": {
+					"name": "DataverseToSQL"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"linkedService": {
+								"referenceName": "AzureDataLakeStorage1",
+								"type": "LinkedServiceReference"
+							},
+							"name": "CDMEntity"
+						},
+						{
+							"linkedService": {
+								"referenceName": "AzureSqlDatabase2",
+								"type": "LinkedServiceReference"
+							},
+							"name": "TargetSQLExisting"
+						}
+					],
+					"sinks": [
+						{
+							"linkedService": {
+								"referenceName": "AzureSqlDatabase2",
+								"type": "LinkedServiceReference"
+							},
+							"name": "AzureSQLDB"
+						},
+						{
+							"linkedService": {
+								"referenceName": "AzureSqlDatabase2",
+								"type": "LinkedServiceReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "IdentifyColumns"
+						},
+						{
+							"name": "AlterRow"
+						},
+						{
+							"name": "Rank"
+						},
+						{
+							"name": "Dedup"
+						},
+						{
+							"name": "UpdateInsertIdentify"
+						},
+						{
+							"name": "FilterDeletedRows"
+						},
+						{
+							"name": "AddEntityName"
+						},
+						{
+							"name": "SelectDeleteLogColumns"
+						},
+						{
+							"name": "fortest"
+						},
+						{
+							"name": "FilterOutNoUpdate"
+						}
+					],
+					"scriptLines": [
+						"parameters{",
+						"     folder as string,",
+						"     entity as string",
+						"}",
+						"source(output(",
+						"          Id as string,",
+						"          SinkCreatedOn as timestamp,",
+						"          SinkModifiedOn as timestamp,",
+						"          priceincludesalestax as long,",
+						"          ispublicsector_it as long,",
+						"          sysdatastatecode as long,",
+						"          bankcustpaymidtable as long,",
+						"          clearingperiod as string,",
+						"          custgroup as string,",
+						"          defaultdimension as long,",
+						"          name as string,",
+						"          paymtermid as string,",
+						"          taxgroupid as string,",
+						"          taxperiodpaymentcode_pl as string,",
+						"          custwriteoffrefrecid as long,",
+						"          custaccountnumseq as long,",
+						"          accountingcurrencyexchangeratetype as long,",
+						"          reportingcurrencyexchangeratetype as long,",
+						"          modifieddatetime as timestamp,",
+						"          modifiedby as string,",
+						"          modifiedtransactionid as long,",
+						"          createddatetime as timestamp,",
+						"          createdby as string,",
+						"          createdtransactionid as long,",
+						"          dataareaid as string,",
+						"          recversion as long,",
+						"          partition as long,",
+						"          sysrowversion as long,",
+						"          recid as long,",
+						"          tableid as long,",
+						"          versionnumber as long,",
+						"          createdon as string,",
+						"          modifiedon as timestamp,",
+						"          IsDelete as boolean",
+						"     ),",
+						"     useSchema: false,",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     inferDriftedColumnTypes: true,",
+						"     ignoreNoFilesFound: true,",
+						"     entity: ($entity),",
+						"     format: 'cdm',",
+						"     manifestType: 'model',",
+						"     folderPath: ($folder),",
+						"     fileSystem: 'dataverse-adache3-unq',",
+						"     timestampFormats: ['MM/dd/yyyy hh:mm:ss a','MM-dd-yyyy hh:mm:ss a','yyyy.MM.dd hh:mm:ss a','yyyy-MM-dd\\'T\\'HH:mm:ss\\'Z\\'','yyyy-MM-dd\\'T\\'HH:mm:ss.SSS\\'Z\\'','yyyy-MM-dd\\'T\\'HH:mm:ss']) ~> CDMEntity",
+						"source(output(",
+						"          Id as string,",
+						"          SinkCreatedOn as timestamp,",
+						"          SinkModifiedOn as timestamp,",
+						"          priceincludesalestax as long,",
+						"          ispublicsector_it as long,",
+						"          sysdatastatecode as long,",
+						"          bankcustpaymidtable as long,",
+						"          clearingperiod as string,",
+						"          custgroup as string,",
+						"          defaultdimension as long,",
+						"          name as string,",
+						"          paymtermid as string,",
+						"          taxgroupid as string,",
+						"          taxperiodpaymentcode_pl as string,",
+						"          custwriteoffrefrecid as long,",
+						"          custaccountnumseq as long,",
+						"          accountingcurrencyexchangeratetype as long,",
+						"          reportingcurrencyexchangeratetype as long,",
+						"          modifieddatetime as timestamp,",
+						"          modifiedby as string,",
+						"          modifiedtransactionid as long,",
+						"          createddatetime as timestamp,",
+						"          createdby as string,",
+						"          createdtransactionid as long,",
+						"          dataareaid as string,",
+						"          recversion as long,",
+						"          partition as long,",
+						"          sysrowversion as long,",
+						"          recid as long,",
+						"          tableid as long,",
+						"          versionnumber as long,",
+						"          createdon as string,",
+						"          modifiedon as timestamp,",
+						"          IsDelete as boolean",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'table',",
+						"     store: 'sqlserver',",
+						"     schemaName: 'dbo',",
+						"     tableName: 'custgroup',",
+						"     isolationLevel: 'READ_UNCOMMITTED') ~> TargetSQLExisting",
+						"CDMEntity derive(Id = toString(byName(\"Id\")),",
+						"          versionnumber = toLong(byName(\"versionnumber\")),",
+						"          IsDelete = toBoolean(byName(\"IsDelete\"))) ~> IdentifyColumns",
+						"FilterOutNoUpdate alterRow(updateIf(isNull(!isNull(TargetSQLExisting@Id)&&IdentifyColumns@versionnumber>TargetSQLExisting@versionnumber&&IdentifyColumns@IsDelete!=true())),",
+						"     deleteIf(IdentifyColumns@IsDelete==true()),",
+						"     insertIf(isNull(TargetSQLExisting@recid))) ~> AlterRow",
+						"IdentifyColumns window(over(Id),",
+						"     desc(Id, false),",
+						"     desc(versionnumber, false),",
+						"     desc(SinkModifiedOn, false),",
+						"     {_RowVersion} = denseRank()) ~> Rank",
+						"Rank filter(toLong(byName(\"_RowVersion\"))==1) ~> Dedup",
+						"Dedup, TargetSQLExisting join(fuzzyCompare(IdentifyColumns@Id, TargetSQLExisting@Id, 80.00),",
+						"     joinType:'left',",
+						"     matchType:'fuzzy',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'off')~> UpdateInsertIdentify",
+						"UpdateInsertIdentify filter(IdentifyColumns@IsDelete==true()) ~> FilterDeletedRows",
+						"FilterDeletedRows derive(EntityName = \"generaljournalentry\") ~> AddEntityName",
+						"AddEntityName select(mapColumn(",
+						"          EntityName,",
+						"          RecordId = IdentifyColumns@Id,",
+						"          SinkDeleteTime = CDMEntity@SinkModifiedOn,",
+						"          VersionNumber = IdentifyColumns@versionnumber",
+						"     ),",
+						"     skipDuplicateMapInputs: false,",
+						"     skipDuplicateMapOutputs: true) ~> SelectDeleteLogColumns",
+						"UpdateInsertIdentify derive(insert = isNull(isNull(TargetSQLExisting@Id) && IdentifyColumns@IsDelete!=true()),",
+						"          update = isNull(!isNull(TargetSQLExisting@Id) && IdentifyColumns@versionnumber>TargetSQLExisting@versionnumber && IdentifyColumns@IsDelete!=true())) ~> fortest",
+						"fortest filter(!isNull(!isNull(TargetSQLExisting@Id) && IdentifyColumns@versionnumber<TargetSQLExisting@versionnumber && IdentifyColumns@IsDelete!=true())) ~> FilterOutNoUpdate",
+						"AlterRow sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'table',",
+						"     store: 'sqlserver',",
+						"     schemaName: 'dbo',",
+						"     tableName: 'custgroup',",
+						"     insertable: true,",
+						"     updateable: true,",
+						"     deletable: true,",
+						"     upsertable: false,",
+						"     keys:['Id'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          each(match(/* All input columns */true()),",
+						"               /* Input name */$$ = $$)",
+						"     )) ~> AzureSQLDB",
+						"SelectDeleteLogColumns sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'table',",
+						"     store: 'sqlserver',",
+						"     schemaName: 'dbo',",
+						"     tableName: 'DeleteLog',",
+						"     insertable: true,",
+						"     updateable: false,",
+						"     deletable: false,",
+						"     upsertable: false,",
+						"     recreate: true,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DataverseCDMToSQL_template')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Data flow which reads CDM entity, transforms the data and move the data to destination SQL DB",
+				"folder": {
+					"name": "DataverseToSQL"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"linkedService": {
+								"referenceName": "AzureDataLakeStorage1",
+								"type": "LinkedServiceReference"
+							},
+							"name": "source1"
+						},
+						{
+							"linkedService": {
+								"referenceName": "AzureSqlDatabase2",
+								"type": "LinkedServiceReference"
+							},
+							"name": "source2"
+						}
+					],
+					"sinks": [
+						{
+							"linkedService": {
+								"referenceName": "AzureSqlDatabase2",
+								"type": "LinkedServiceReference"
+							},
+							"name": "AzureSQLDB"
+						},
+						{
+							"linkedService": {
+								"referenceName": "AzureSqlDatabase2",
+								"type": "LinkedServiceReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "IdentifyColumns"
+						},
+						{
+							"name": "AlterRow"
+						},
+						{
+							"name": "Rank"
+						},
+						{
+							"name": "Dedup"
+						},
+						{
+							"name": "FilterFolders"
+						},
+						{
+							"name": "FilterDeletedRows"
+						},
+						{
+							"name": "AddEntityName"
+						},
+						{
+							"name": "SelectDeleteLogColumns"
+						},
+						{
+							"name": "FilterMaxVersion"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          Id as string,",
+						"          SinkCreatedOn as timestamp,",
+						"          SinkModifiedOn as timestamp,",
+						"          priceincludesalestax as long,",
+						"          ispublicsector_it as long,",
+						"          sysdatastatecode as long,",
+						"          bankcustpaymidtable as long,",
+						"          clearingperiod as string,",
+						"          custgroup as string,",
+						"          defaultdimension as long,",
+						"          name as string,",
+						"          paymtermid as string,",
+						"          taxgroupid as string,",
+						"          taxperiodpaymentcode_pl as string,",
+						"          custwriteoffrefrecid as long,",
+						"          custaccountnumseq as long,",
+						"          accountingcurrencyexchangeratetype as long,",
+						"          reportingcurrencyexchangeratetype as long,",
+						"          modifieddatetime as timestamp,",
+						"          modifiedby as string,",
+						"          modifiedtransactionid as long,",
+						"          createddatetime as timestamp,",
+						"          createdby as string,",
+						"          createdtransactionid as long,",
+						"          dataareaid as string,",
+						"          recversion as long,",
+						"          partition as long,",
+						"          sysrowversion as long,",
+						"          recid as long,",
+						"          tableid as long,",
+						"          versionnumber as long,",
+						"          createdon as string,",
+						"          modifiedon as timestamp,",
+						"          IsDelete as boolean",
+						"     ),",
+						"     useSchema: false,",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     inferDriftedColumnTypes: true,",
+						"     ignoreNoFilesFound: true,",
+						"     entity: 'custgroup',",
+						"     format: 'cdm',",
+						"     manifestType: 'model',",
+						"     folderPath: '2025-06-17T08.05.26Z',",
+						"     fileSystem: 'dataverse-adache3-unq',",
+						"     timestampFormats: ['MM/dd/yyyy hh:mm:ss a','MM-dd-yyyy hh:mm:ss a','yyyy.MM.dd hh:mm:ss a','yyyy-MM-dd\\'T\\'HH:mm:ss\\'Z\\'','yyyy-MM-dd\\'T\\'HH:mm:ss.SSS\\'Z\\'','yyyy-MM-dd\\'T\\'HH:mm:ss']) ~> source1",
+						"source(output(",
+						"          maxversion as long,",
+						"          maxmodified as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'query',",
+						"     store: 'sqlserver',",
+						"     query: 'SELECT COALESCE(MAX(versionnumber),0) AS maxversion , COALESCE(MAX(SinkModifiedOn),0) AS maxmodified FROM [dbo].[custgroup]',",
+						"     isolationLevel: 'READ_UNCOMMITTED') ~> source2",
+						"source1 derive(Id = toString(byName(\"Id\")),",
+						"          versionnumber = toLong(byName(\"versionnumber\")),",
+						"          IsDelete = toBoolean(byName(\"IsDelete\"))) ~> IdentifyColumns",
+						"FilterMaxVersion alterRow(deleteIf(IsDelete==true()),",
+						"     upsertIf(isNull(IsDelete)||IsDelete==false())) ~> AlterRow",
+						"IdentifyColumns window(over(Id),",
+						"     desc(Id, false),",
+						"     desc(versionnumber, false),",
+						"     desc(SinkModifiedOn, false),",
+						"     {_RowVersion} = denseRank()) ~> Rank",
+						"Rank filter(toLong(byName(\"_RowVersion\"))==1) ~> Dedup",
+						"Dedup, source2 join(versionnumber > maxversion,",
+						"     joinType:'left',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'right')~> FilterFolders",
+						"FilterMaxVersion filter(IsDelete==true()) ~> FilterDeletedRows",
+						"FilterDeletedRows derive(EntityName = \"generaljournalentry\") ~> AddEntityName",
+						"AddEntityName select(mapColumn(",
+						"          EntityName,",
+						"          RecordId = Id,",
+						"          SinkDeleteTime = SinkModifiedOn,",
+						"          VersionNumber = versionnumber",
+						"     ),",
+						"     skipDuplicateMapInputs: false,",
+						"     skipDuplicateMapOutputs: true) ~> SelectDeleteLogColumns",
+						"FilterFolders filter(or(versionnumber>toLong(maxversion),SinkModifiedOn>maxmodified)) ~> FilterMaxVersion",
+						"AlterRow sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'table',",
+						"     store: 'sqlserver',",
+						"     schemaName: 'dbo',",
+						"     tableName: 'custgroup',",
+						"     insertable: true,",
+						"     updateable: false,",
+						"     deletable: true,",
+						"     upsertable: true,",
+						"     keys:['Id'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> AzureSQLDB",
+						"SelectDeleteLogColumns sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'table',",
+						"     store: 'sqlserver',",
+						"     schemaName: 'dbo',",
+						"     tableName: 'DeleteLog',",
+						"     insertable: true,",
+						"     updateable: false,",
+						"     deletable: false,",
+						"     upsertable: false,",
+						"     recreate: true,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DataverseToSQLDemo')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEachEntity",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "LookupModelJson",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('LookupModelJson').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "DataverseToSQL",
+									"type": "ExecuteDataFlow",
+									"dependsOn": [
+										{
+											"activity": "GetPrefolder",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataflow": {
+											"referenceName": "DataverseCDMToSQL_doubleinterval",
+											"type": "DataFlowReference",
+											"parameters": {
+												"dbschema": {
+													"value": "'@{variables('dbschema')}'",
+													"type": "Expression"
+												},
+												"prefix": {
+													"value": "'@{variables('prefix')}'",
+													"type": "Expression"
+												},
+												"entity": {
+													"value": "'@{item().Entity}'",
+													"type": "Expression"
+												},
+												"prefolder": {
+													"value": "'@{activity('GetPrefolder').output.firstRow.prefolder}'",
+													"type": "Expression"
+												},
+												"container": {
+													"value": "'@{pipeline().parameters.container}'",
+													"type": "Expression"
+												},
+												"folder": {
+													"value": "'@{pipeline().parameters.folder}'",
+													"type": "Expression"
+												}
+											},
+											"datasetParameters": {
+												"currentfolder": {},
+												"selectmaxversion": {},
+												"previousfolder": {},
+												"AzureSQLDB": {},
+												"sink1": {}
+											}
+										},
+										"staging": {},
+										"compute": {
+											"coreCount": 8,
+											"computeType": "General"
+										},
+										"traceLevel": "Fine"
+									}
+								},
+								{
+									"name": "UpdateMaxversion",
+									"type": "Script",
+									"dependsOn": [
+										{
+											"activity": "DataverseToSQL",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"linkedServiceName": {
+										"referenceName": "AzureSqlDatabase2",
+										"type": "LinkedServiceReference"
+									},
+									"typeProperties": {
+										"scripts": [
+											{
+												"type": "NonQuery",
+												"text": {
+													"value": "DECLARE @schemaName NVARCHAR(20) = '@{variables('dbschema')}';\nDECLARE @tablePrefix NVARCHAR(148) = '@{variables('prefix')}';\nDECLARE @container NVARCHAR(70) = '@{pipeline().parameters.container}';\nDECLARE @folder NVARCHAR(70) = '@{pipeline().parameters.folder}';\nDECLARE @runid NVARCHAR(40) = '@{pipeline().RunId}';\nDECLARE @entity NVARCHAR(200) = '@{item().Entity}';\n\nDECLARE @UpdateVersionLog NVARCHAR(MAX) =\n'UPDATE '+ @schemaName + '.' + @tablePrefix + 'DataverseToSQLVerionLog\nSET\nPipelineRunId = ''' + @runid + ''', prefolder = ''' + @folder + ''', premaxversion = maxversion, maxversion = (SELECT MAX(versionnumber) FROM ' + @schemaName + '.' + @tablePrefix + @entity + ') \nWHERE Entity = '+ '''' + @entity + ''''\n;\nEXECUTE sp_executesql @UpdateVersionLog;",
+													"type": "Expression"
+												}
+											}
+										],
+										"scriptBlockExecutionTimeout": "02:00:00"
+									}
+								},
+								{
+									"name": "GetPrefolder",
+									"type": "Lookup",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"sqlReaderQuery": {
+												"value": "@concat('SELECT prefolder FROM ', variables('dbschema'),'.' ,variables('prefix'),'DataverseToSQLVerionLog WHERE Entity = ''' ,item().Entity,'''')",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"dataset": {
+											"referenceName": "DataverseToSQLPrefolder",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "LookupModelJson",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "select Entity from DataverseToSQLVerionLog",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "DataverseToSQLPrefolder",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"container": {
+						"type": "String",
+						"defaultValue": "dataverse-adache3-unq"
+					},
+					"folder": {
+						"type": "String",
+						"defaultValue": "2025-06-17T08.05.26Z"
+					}
+				},
+				"variables": {
+					"dbschema": {
+						"type": "String",
+						"defaultValue": "dbo"
+					},
+					"prefix": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "DataverseToSQL"
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-07-16T06:03:07Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DataverseCDMToSQL_doubleinterval')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DataverseToSQLDemo_DW1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEachEntity",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "LookupModelJson",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('LookupModelJson').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Execute Pipeline1",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"policy": {
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "DataverseToSQLDemo_DW2",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"entity": {
+												"value": "@item().Entity",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "LookupModelJson",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "select Entity from DataverseToSQLVerionLog",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "DataverseToSQLPrefolder",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"container": {
+						"type": "String",
+						"defaultValue": "dataverse-adache3-unq"
+					},
+					"folder": {
+						"type": "String",
+						"defaultValue": "2025-06-17T08.05.26Z"
+					}
+				},
+				"variables": {
+					"dbschema": {
+						"type": "String",
+						"defaultValue": "dbo"
+					},
+					"prefix": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "DataverseToSQL"
+				},
+				"annotations": [],
+				"lastPublishTime": "2026-06-02T07:55:51Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DataverseToSQLDemo_join')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DataverseCDMToSQL_join",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"CDMEntity": {},
+									"TargetSQLExisting": {},
+									"AzureSQLDB": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "GetFolderName",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "DelimitedTextDataverse",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"container": {
+						"type": "String",
+						"defaultValue": "dataverse-adache3-unq"
+					},
+					"folder": {
+						"type": "String",
+						"defaultValue": "2025-06-17T08.05.26Z"
+					}
+				},
+				"variables": {
+					"dbschema": {
+						"type": "String",
+						"defaultValue": "dbo"
+					},
+					"prefix": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "DataverseToSQL"
+				},
+				"annotations": [],
+				"lastPublishTime": "2026-06-02T07:55:51Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DataverseCDMToSQL_join')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/HanziTest')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "FileServerWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "AzureSqlHanziDS",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DelimitedHanziDS",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-09-17T02:49:07Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MVNetBilling_Copy')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"preCopyScript": "truncate table custgroupcopy",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false,
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "AzureSqlTableVNet",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AzureSqlTableVNet_dest",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "BillingTest"
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-06-26T01:43:22Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MVNetBilling_pipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Lookup1",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "AzureSqlTableVNet",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "BillingTest"
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-06-26T01:43:22Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/OnFailureTest')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Lookup1",
+						"type": "Lookup",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "DataverseToSQLDestination",
+								"type": "DatasetReference",
+								"parameters": {
+									"tablename": "custgroup"
+								}
+							}
+						}
+					},
+					{
+						"name": "Lookup1_copy1",
+						"type": "Lookup",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "DataverseToSQLDestination",
+								"type": "DatasetReference",
+								"parameters": {
+									"tablename": "custgroup"
+								}
+							}
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "[[1,2,3]",
+								"type": "Expression"
+							},
+							"batchCount": 2,
+							"activities": [
+								{
+									"name": "Lookup1_copy2",
+									"type": "Lookup",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"dataset": {
+											"referenceName": "DataverseToSQLDestination",
+											"type": "DatasetReference",
+											"parameters": {
+												"tablename": "custgroup"
+											}
+										}
+									}
+								},
+								{
+									"name": "Set variable1",
+									"type": "SetVariable",
+									"dependsOn": [
+										{
+											"activity": "Lookup1_copy2",
+											"dependencyConditions": [
+												"Failed"
+											]
+										}
+									],
+									"policy": {
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "test",
+										"value": "test"
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"test": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-07-15T05:02:58Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PartitionTest')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "SELECT * FROM [dbo].[PartitionTestSrc]",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"parallelCopies": 8,
+							"dataIntegrationUnits": 8,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "PartitionTestSrc",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "PartitionTestDest",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2024-12-03T07:06:11Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/PartitionTestSrc')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Execute Pipeline1",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"policy": {
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pipeline2",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Notebook1",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "Execute Pipeline1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Users/yofe@microsoft.com/TestNotebook"
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureDatabricks1",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "ParentChild"
+				},
+				"annotations": [],
+				"lastPublishTime": "2026-04-09T07:28:05Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/trigger1')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "pipeline2",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "Databricks",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 5,
+						"startTime": "2026-04-08T01:06:00",
+						"timeZone": "China Standard Time"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BoolConvDF')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "BoolTestSrc",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "BoolTestDest",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     inferDriftedColumnTypes: true,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 derive(each(match(type!='string'), $$ = toString($$))) ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     recreate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DataverseCDMToSQL_initial')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Data flow which reads CDM entity, transforms the data and move the data to destination SQL DB",
+				"folder": {
+					"name": "DataverseToSQL"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"linkedService": {
+								"referenceName": "AzureDataLakeStorage1",
+								"type": "LinkedServiceReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DataverseInitial",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(useSchema: false,",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     entity: 'generaljournalentry',",
+						"     format: 'cdm',",
+						"     manifestType: 'model',",
+						"     folderPath: '',",
+						"     fileSystem: 'synapselinkfordataversedemo') ~> source1",
+						"source1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DecimalTest_DF')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DecimalTestBlob",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DecimalTestSql",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "assert1"
+						}
+					],
+					"scriptLines": [
+						"parameters{",
+						"     decimalcol as string[]",
+						"}",
+						"source(output(",
+						"          decimal as long",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 assert(expectTrue(!isNull(toDecimal(decimal, 9, 2)), false, 'DecimalOverflow'),",
+						"     abort: true) ~> assert1",
+						"assert1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          decimal as decimal(9,2),",
+						"          varchar as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          decimal",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflowParamTest')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTableParam",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTableParam",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"parameters{",
+						"     hostname as string,",
+						"     dbname as string",
+						"}",
+						"source(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     inferDriftedColumnTypes: true,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/optionsetdf')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "optionsetsrc",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						},
+						{
+							"dataset": {
+								"referenceName": "optionsetdest",
+								"type": "DatasetReference"
+							},
+							"name": "ExistingData"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "optionsetdest",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "join1"
+						},
+						{
+							"name": "filter1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          Column_1 as string,",
+						"          Column_2 as string,",
+						"          Column_3 as string,",
+						"          Column_4 as string,",
+						"          Column_5 as string,",
+						"          Column_6 as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source(output(",
+						"          EntityName as string,",
+						"          OptionSetName as string,",
+						"          Option as string,",
+						"          IsUserLocalizedLabel as string,",
+						"          LocalizedLabelLanguageCode as string,",
+						"          LocalizedLabel as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     query: 'select\\nEntityName,\\nOptionSetName,\\nconvert(varchar(2),[Option]) as [Option],\\nCASE WHEN IsUserLocalizedLabel = 1 THEN \\'True\\' ELSE \\'False\\' END AS IsUserLocalizedLabel,\\nconvert(varchar(5),LocalizedLabelLanguageCode) as LocalizedLabelLanguageCode,\\nLocalizedLabel\\nfrom optionsetmetadata ',",
+						"     format: 'query') ~> ExistingData",
+						"source1, ExistingData join(Column_1 == EntityName",
+						"     && Column_2 == OptionSetName",
+						"     && Column_3 == Option",
+						"     && Column_4 == IsUserLocalizedLabel",
+						"     && Column_5 == LocalizedLabelLanguageCode",
+						"     && Column_6 == LocalizedLabel,",
+						"     joinType:'left',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> join1",
+						"join1 filter(isNull(Option)) ~> filter1",
+						"filter1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          EntityName as string,",
+						"          OptionSetName as string,",
+						"          Option as integer,",
+						"          IsUserLocalizedLabel as boolean,",
+						"          LocalizedLabelLanguageCode as integer,",
+						"          LocalizedLabel as string,",
+						"          GlobalOptionSetName as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          EntityName = Column_1,",
+						"          OptionSetName = Column_2,",
+						"          Option = Column_3,",
+						"          IsUserLocalizedLabel = Column_4,",
+						"          LocalizedLabelLanguageCode = Column_5,",
+						"          LocalizedLabel = Column_6",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/optionsetdest')]"
+			]
+		}
+	]
+}

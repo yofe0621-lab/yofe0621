@@ -1,0 +1,2373 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adfyofe"
+		},
+		"AzureBlobStorage672_properties_privateLinkResourceId": {
+			"type": "string",
+			"defaultValue": "/subscriptions/26c1fddb-1b8b-4755-a146-a7f8bfe73f39/resourceGroups/yoferg/providers/Microsoft.Storage/storageAccounts/blobyofe"
+		},
+		"AzureBlobStorage672_properties_groupId": {
+			"type": "string",
+			"defaultValue": "blob"
+		},
+		"AzureBlobStorage672_properties_fqdns": {
+			"type": "array",
+			"defaultValue": [
+				"blobyofe.blob.core.windows.net"
+			]
+		},
+		"AzureSqlDatabase504_properties_privateLinkResourceId": {
+			"type": "string",
+			"defaultValue": "/subscriptions/26c1fddb-1b8b-4755-a146-a7f8bfe73f39/resourceGroups/yoferg/providers/Microsoft.Sql/servers/sqlyofe"
+		},
+		"AzureSqlDatabase504_properties_groupId": {
+			"type": "string",
+			"defaultValue": "sqlServer"
+		},
+		"AzureSqlDatabase504_properties_fqdns": {
+			"type": "array",
+			"defaultValue": [
+				"sqlyofe.database.windows.net"
+			]
+		},
+		"AzureSqlDatabase606_properties_privateLinkResourceId": {
+			"type": "string",
+			"defaultValue": "/subscriptions/26c1fddb-1b8b-4755-a146-a7f8bfe73f39/resourceGroups/yoferg/providers/Microsoft.Sql/servers/yofesql"
+		},
+		"AzureSqlDatabase606_properties_groupId": {
+			"type": "string",
+			"defaultValue": "sqlServer"
+		},
+		"AzureSqlDatabase606_properties_fqdns": {
+			"type": "array",
+			"defaultValue": [
+				"yofesql.database.windows.net"
+			]
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/default/AzureBlobStorage672')]",
+			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks/managedPrivateEndpoints",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"privateLinkResourceId": "[parameters('AzureBlobStorage672_properties_privateLinkResourceId')]",
+				"groupId": "[parameters('AzureBlobStorage672_properties_groupId')]",
+				"fqdns": "[parameters('AzureBlobStorage672_properties_fqdns')]"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/default/AzureSqlDatabase504')]",
+			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks/managedPrivateEndpoints",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"privateLinkResourceId": "[parameters('AzureSqlDatabase504_properties_privateLinkResourceId')]",
+				"groupId": "[parameters('AzureSqlDatabase504_properties_groupId')]",
+				"fqdns": "[parameters('AzureSqlDatabase504_properties_fqdns')]"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/default/AzureSqlDatabase606')]",
+			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks/managedPrivateEndpoints",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"privateLinkResourceId": "[parameters('AzureSqlDatabase606_properties_privateLinkResourceId')]",
+				"groupId": "[parameters('AzureSqlDatabase606_properties_groupId')]",
+				"fqdns": "[parameters('AzureSqlDatabase606_properties_fqdns')]"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AutoconvertTest')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "CommonDataServiceForAppsSource",
+								"additionalColumns": [
+									{
+										"name": "Additional",
+										"value": "123"
+									}
+								]
+							},
+							"sink": {
+								"type": "AzureMySqlSink",
+								"writeBatchSize": 10000,
+								"writeBatchTimeout": "00:00:30"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Additional",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Col",
+											"type": "Int32"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "DataverseEntity1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AzureMySqlTable1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-08-13T05:22:09Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DataverseToSQLDemo_DW2')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEachEntity",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "GetFolderName",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetFolderName').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "DataverseToStaging",
+									"type": "ExecuteDataFlow",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataflow": {
+											"referenceName": "DataverseCDMToSQL_join_DW",
+											"type": "DataFlowReference",
+											"parameters": {
+												"folder": {
+													"value": "'@{pipeline().parameters.folder}'",
+													"type": "Expression"
+												},
+												"entity": {
+													"value": "'@{pipeline().parameters.entity}'",
+													"type": "Expression"
+												}
+											},
+											"datasetParameters": {
+												"CDMEntity": {},
+												"Staging": {}
+											}
+										},
+										"staging": {
+											"linkedService": {
+												"referenceName": "AzureBlobStorage1",
+												"type": "LinkedServiceReference"
+											},
+											"folderPath": "test"
+										},
+										"compute": {
+											"coreCount": 8,
+											"computeType": "General"
+										},
+										"traceLevel": "Fine"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "GetFolderName",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "DelimitedTextDataverse",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"modifiedDatetimeStart": {
+									"value": "@adddays(utcNow(),-1)",
+									"type": "Expression"
+								},
+								"modifiedDatetimeEnd": {
+									"value": "@utcNow()",
+									"type": "Expression"
+								},
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"container": {
+						"type": "String",
+						"defaultValue": "dataverse-adache3-unq"
+					},
+					"folder": {
+						"type": "String",
+						"defaultValue": "2025-06-17T08.05.26Z"
+					},
+					"entity": {
+						"type": "string"
+					}
+				},
+				"variables": {
+					"dbschema": {
+						"type": "String",
+						"defaultValue": "dbo"
+					},
+					"prefix": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "DataverseToSQL"
+				},
+				"annotations": [],
+				"lastPublishTime": "2026-06-02T08:35:27Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LakehouseSQLDF')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup1').output.value",
+								"type": "Expression"
+							},
+							"batchCount": 10,
+							"activities": [
+								{
+									"name": "Copy data1",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"sqlReaderQuery": {
+												"value": "@concat('select * from [dbo].[publicholidays] where replace(substring(convert(varchar(30), date),1,10),''-'','''') = ''', item().datestring,'''')",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "DelimitedTextSink",
+											"storeSettings": {
+												"type": "AzureBlobStorageWriteSettings"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextWriteSettings",
+												"quoteAllText": true,
+												"fileExtension": ".txt"
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "AzureSqlTableLH",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "DelimitedText2",
+											"type": "DatasetReference",
+											"parameters": {
+												"foldername": {
+													"value": "@item().datestring",
+													"type": "Expression"
+												},
+												"filename": {
+													"value": "@item().datestring",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "Lookup1",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "select distinct replace(substring(convert(varchar(30), date),1,10),'-','') as [datestring] from [dbo].[publicholidays]",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "AzureSqlTableLH",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2024-08-13T03:14:18Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PolybaseTest')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "ParquetSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "ParquetReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlDWSink",
+								"writeBehavior": "Insert",
+								"sqlWriterUseTableLock": false,
+								"tableOption": "autoCreate",
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "CALENDAR_DATE",
+											"type": "DateTime",
+											"physicalType": "INT96"
+										},
+										"sink": {
+											"name": "CALENDAR_DATE",
+											"type": "DateTime",
+											"physicalType": "datetime2"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_CCYY_NBR",
+											"type": "Decimal",
+											"physicalType": "DECIMAL",
+											"scale": 18,
+											"precision": 38
+										},
+										"sink": {
+											"name": "CALENDAR_CCYY_NBR",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 18,
+											"precision": 38
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_CCYYMM_NBR",
+											"type": "Decimal",
+											"physicalType": "DECIMAL",
+											"scale": 18,
+											"precision": 38
+										},
+										"sink": {
+											"name": "CALENDAR_CCYYMM_NBR",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 18,
+											"precision": 38
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_CCYYQ_NBR",
+											"type": "Decimal",
+											"physicalType": "DECIMAL",
+											"scale": 18,
+											"precision": 38
+										},
+										"sink": {
+											"name": "CALENDAR_CCYYQ_NBR",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 18,
+											"precision": 38
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_DATE_DESC",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "CALENDAR_DATE_DESC",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_MTH_BEG_DATE",
+											"type": "DateTime",
+											"physicalType": "INT96"
+										},
+										"sink": {
+											"name": "CALENDAR_MTH_BEG_DATE",
+											"type": "DateTime",
+											"physicalType": "datetime2"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_MTH_DAY_DESC",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "CALENDAR_MTH_DAY_DESC",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_MTH_DESC",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "CALENDAR_MTH_DESC",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_MTH_END_DATE",
+											"type": "DateTime",
+											"physicalType": "INT96"
+										},
+										"sink": {
+											"name": "CALENDAR_MTH_END_DATE",
+											"type": "DateTime",
+											"physicalType": "datetime2"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_QTR_BEG_DATE",
+											"type": "DateTime",
+											"physicalType": "INT96"
+										},
+										"sink": {
+											"name": "CALENDAR_QTR_BEG_DATE",
+											"type": "DateTime",
+											"physicalType": "datetime2"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_QTR_DESC",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "CALENDAR_QTR_DESC",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_QTR_END_DATE",
+											"type": "DateTime",
+											"physicalType": "INT96"
+										},
+										"sink": {
+											"name": "CALENDAR_QTR_END_DATE",
+											"type": "DateTime",
+											"physicalType": "datetime2"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_WEEK_BEG_DATE",
+											"type": "DateTime",
+											"physicalType": "INT96"
+										},
+										"sink": {
+											"name": "CALENDAR_WEEK_BEG_DATE",
+											"type": "DateTime",
+											"physicalType": "datetime2"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_WEEK_DAY_DESC",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "CALENDAR_WEEK_DAY_DESC",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_WEEK_DESC",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "CALENDAR_WEEK_DESC",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_WEEK_END_DATE",
+											"type": "DateTime",
+											"physicalType": "INT96"
+										},
+										"sink": {
+											"name": "CALENDAR_WEEK_END_DATE",
+											"type": "DateTime",
+											"physicalType": "datetime2"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_WEEK_NBR",
+											"type": "Decimal",
+											"physicalType": "DECIMAL",
+											"scale": 18,
+											"precision": 38
+										},
+										"sink": {
+											"name": "CALENDAR_WEEK_NBR",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 18,
+											"precision": 38
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_WEEK_NBR_MON_SUN",
+											"type": "Decimal",
+											"physicalType": "DECIMAL",
+											"scale": 18,
+											"precision": 38
+										},
+										"sink": {
+											"name": "CALENDAR_WEEK_NBR_MON_SUN",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 18,
+											"precision": 38
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_YR_BEG_DATE",
+											"type": "DateTime",
+											"physicalType": "INT96"
+										},
+										"sink": {
+											"name": "CALENDAR_YR_BEG_DATE",
+											"type": "DateTime",
+											"physicalType": "datetime2"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_YR_END_DATE",
+											"type": "DateTime",
+											"physicalType": "INT96"
+										},
+										"sink": {
+											"name": "CALENDAR_YR_END_DATE",
+											"type": "DateTime",
+											"physicalType": "datetime2"
+										}
+									},
+									{
+										"source": {
+											"name": "COMPLETED_QTR_IND",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "COMPLETED_QTR_IND",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "COMPLETED_WEEK_IND",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "COMPLETED_WEEK_IND",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "COMPLETED_MTH_IND",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "COMPLETED_MTH_IND",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "COMPLETED_YR_IND",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "COMPLETED_YR_IND",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "CURRENT_MTH_IND",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "CURRENT_MTH_IND",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "CURRENT_QTR_IND",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "CURRENT_QTR_IND",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "CURRENT_WEEK_IND",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "CURRENT_WEEK_IND",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "CURRENT_YR_IND",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "CURRENT_YR_IND",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "CURR_LAST_COMPLETED_MTH_IND",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "CURR_LAST_COMPLETED_MTH_IND",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "CURR_LAST2_COMPLETED_MTH_IND",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "CURR_LAST2_COMPLETED_MTH_IND",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "LAST_COMPLETED_12_MTH_IND",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "LAST_COMPLETED_12_MTH_IND",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "LAST_COMPLETED_30_DAY_IND",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "LAST_COMPLETED_30_DAY_IND",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "LAST_COMPLETED_DAY_IND",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "LAST_COMPLETED_DAY_IND",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "LAST_COMPLETED_MTH_IND",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "LAST_COMPLETED_MTH_IND",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "LAST_COMPLETED_QTR_IND",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "LAST_COMPLETED_QTR_IND",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "LAST_COMPLETED_WEEK_IND",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "LAST_COMPLETED_WEEK_IND",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "LAST_COMPLETED_YR_IND",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "LAST_COMPLETED_YR_IND",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ParquetDateTest",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AzureSynapseAnalyticsTable1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Copy data1_Legacy",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "ParquetSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "ParquetReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlDWSink",
+								"allowCopyCommand": true,
+								"copyCommandSettings": {},
+								"disableMetricsCollection": false
+							},
+							"enableStaging": true,
+							"stagingSettings": {
+								"linkedServiceName": {
+									"referenceName": "AzureBlobStorage1",
+									"type": "LinkedServiceReference"
+								},
+								"path": "test"
+							},
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "CALENDAR_DATE",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "CALENDAR_DATE",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_CCYY_NBR",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "CALENDAR_CCYY_NBR",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_CCYYMM_NBR",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "CALENDAR_CCYYMM_NBR",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_CCYYQ_NBR",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "CALENDAR_CCYYQ_NBR",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_DATE_DESC",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CALENDAR_DATE_DESC",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_MTH_BEG_DATE",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "CALENDAR_MTH_BEG_DATE",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_MTH_DAY_DESC",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CALENDAR_MTH_DAY_DESC",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_MTH_DESC",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CALENDAR_MTH_DESC",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_MTH_END_DATE",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "CALENDAR_MTH_END_DATE",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_QTR_BEG_DATE",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "CALENDAR_QTR_BEG_DATE",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_QTR_DESC",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CALENDAR_QTR_DESC",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_QTR_END_DATE",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "CALENDAR_QTR_END_DATE",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_WEEK_BEG_DATE",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "CALENDAR_WEEK_BEG_DATE",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_WEEK_DAY_DESC",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CALENDAR_WEEK_DAY_DESC",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_WEEK_DESC",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CALENDAR_WEEK_DESC",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_WEEK_END_DATE",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "CALENDAR_WEEK_END_DATE",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_WEEK_NBR",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "CALENDAR_WEEK_NBR",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_WEEK_NBR_MON_SUN",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "CALENDAR_WEEK_NBR_MON_SUN",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_YR_BEG_DATE",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "CALENDAR_YR_BEG_DATE",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "CALENDAR_YR_END_DATE",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "CALENDAR_YR_END_DATE",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "COMPLETED_QTR_IND",
+											"type": "String"
+										},
+										"sink": {
+											"name": "COMPLETED_QTR_IND",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "COMPLETED_WEEK_IND",
+											"type": "String"
+										},
+										"sink": {
+											"name": "COMPLETED_WEEK_IND",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "COMPLETED_MTH_IND",
+											"type": "String"
+										},
+										"sink": {
+											"name": "COMPLETED_MTH_IND",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "COMPLETED_YR_IND",
+											"type": "String"
+										},
+										"sink": {
+											"name": "COMPLETED_YR_IND",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CURRENT_MTH_IND",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CURRENT_MTH_IND",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CURRENT_QTR_IND",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CURRENT_QTR_IND",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CURRENT_WEEK_IND",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CURRENT_WEEK_IND",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CURRENT_YR_IND",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CURRENT_YR_IND",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CURR_LAST_COMPLETED_MTH_IND",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CURR_LAST_COMPLETED_MTH_IND",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CURR_LAST2_COMPLETED_MTH_IND",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CURR_LAST2_COMPLETED_MTH_IND",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "LAST_COMPLETED_12_MTH_IND",
+											"type": "String"
+										},
+										"sink": {
+											"name": "LAST_COMPLETED_12_MTH_IND",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "LAST_COMPLETED_30_DAY_IND",
+											"type": "String"
+										},
+										"sink": {
+											"name": "LAST_COMPLETED_30_DAY_IND",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "LAST_COMPLETED_DAY_IND",
+											"type": "String"
+										},
+										"sink": {
+											"name": "LAST_COMPLETED_DAY_IND",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "LAST_COMPLETED_MTH_IND",
+											"type": "String"
+										},
+										"sink": {
+											"name": "LAST_COMPLETED_MTH_IND",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "LAST_COMPLETED_QTR_IND",
+											"type": "String"
+										},
+										"sink": {
+											"name": "LAST_COMPLETED_QTR_IND",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "LAST_COMPLETED_WEEK_IND",
+											"type": "String"
+										},
+										"sink": {
+											"name": "LAST_COMPLETED_WEEK_IND",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "LAST_COMPLETED_YR_IND",
+											"type": "String"
+										},
+										"sink": {
+											"name": "LAST_COMPLETED_YR_IND",
+											"type": "String"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ParquetDateTest",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AzureSynapseAnalyticsTableLegacy",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2024-09-18T05:44:38Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SPOTest')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Web1",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"method": "GET",
+							"headers": {},
+							"url": "https://graph.microsoft.com/v1.0/sites/7dd1d6b6-c1b8-4fec-b91e-45801e628c44/drives/b!ttbRfbjB7E-5HkWAHmKMRAWkQv-ry8RNmQvUEwkYG8dJwSrRFUDBRZOvrXCPkuNS/root:/test1/Language%20Verification.xlsx",
+							"authentication": {
+								"type": "ServicePrincipal",
+								"userTenant": "4998146e-7fc7-404d-a42a-a658d9e6df62",
+								"username": "8dca95b2-6260-4ff9-96ce-b9462d89c94c",
+								"resource": "https://graph.microsoft.com/",
+								"password": {
+									"type": "SecureString",
+									"value": "**********"
+								}
+							}
+						}
+					},
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Web1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "HttpReadSettings",
+									"requestMethod": "GET"
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "BinarySPO",
+								"type": "DatasetReference",
+								"parameters": {
+									"downloadUrl": {
+										"value": "@activity('Web1').output['@microsoft.graph.downloadUrl']",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Binaryadls",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-07-24T00:22:37Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SchemaDrift_ControlTbl')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "CopySrcToStgSer",
+						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SchemaSrc",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "SchemaStagingADLS",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "DataFlowStgToDestSer_NoJoin",
+						"type": "ExecuteDataFlow",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [
+							{
+								"activity": "CopySrcToStgSer",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "SchemaTest_Str_NoJoin",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"IncrementalData": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Lookup1",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"dataset": {
+								"referenceName": "SchemaControlTbl",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup1').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "CopySrcToStgSer_copy1",
+									"type": "Copy",
+									"dependsOn": [
+										{
+											"activity": "SetEntityVar",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										},
+										{
+											"activity": "SetKeyVar",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										},
+										{
+											"activity": "SetQueryVar",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "CommonDataServiceForAppsSource",
+											"query": {
+												"value": "@concat(\nitem().query,\n    '<filter type=\"and\">\n      <condition attribute=\"modifiedon\" operator=\"lt\" value=\"',\nsubstring(replace(string(startOfHour(utcNow())),'T',' '),0,23),\n'\" />\n      <condition attribute=\"modifiedon\" operator=\"ge\" value=\"',\nsubstring(replace(string(string(startOfHour(addhours(utcNow(),-1)))),'T',' '),0,23),\n'\" />\n    </filter>\n  </entity>\n</fetch>\n'\n)",
+												"type": "Expression"
+											}
+										},
+										"sink": {
+											"type": "DelimitedTextSink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextWriteSettings",
+												"quoteAllText": true,
+												"fileExtension": ".txt"
+											}
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "DataverseEntity1",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "SchemaStagingADLS",
+											"type": "DatasetReference",
+											"parameters": {
+												"filename": {
+													"value": "@concat(item().entity,'.csv')",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								},
+								{
+									"name": "DataFlowStgToDestSer_NoJoin_copy1",
+									"type": "ExecuteDataFlow",
+									"dependsOn": [
+										{
+											"activity": "CopySrcToStgSer_copy1",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataflow": {
+											"referenceName": "SchemaTest_Str_NoJoin",
+											"type": "DataFlowReference",
+											"parameters": {
+												"entity": {
+													"value": "'@{item().entity}'",
+													"type": "Expression"
+												},
+												"keycol": {
+													"value": "'@{item().keycol}'",
+													"type": "Expression"
+												}
+											},
+											"datasetParameters": {
+												"IncrementalData": {},
+												"sink1": {}
+											}
+										},
+										"staging": {},
+										"compute": {
+											"coreCount": 8,
+											"computeType": "General"
+										},
+										"traceLevel": "Fine"
+									}
+								},
+								{
+									"name": "SetEntityVar",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"policy": {
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "entity",
+										"value": {
+											"value": "@item().entity",
+											"type": "Expression"
+										}
+									}
+								},
+								{
+									"name": "SetKeyVar",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"policy": {
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "keycol",
+										"value": {
+											"value": "@item().keycol",
+											"type": "Expression"
+										}
+									}
+								},
+								{
+									"name": "SetQueryVar",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"policy": {
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "query",
+										"value": {
+											"value": "@item().query",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"entity": {
+						"type": "String"
+					},
+					"keycol": {
+						"type": "String"
+					},
+					"query": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2026-02-06T08:10:24Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SimpleTest')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Set variable1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@variables('Array')",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy data1",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureMySqlSource",
+											"queryTimeout": "02:00:00"
+										},
+										"sink": {
+											"type": "AzureMySqlSink",
+											"writeBatchSize": 10000,
+											"writeBatchTimeout": "00:00:30"
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "AzureMySqlTable1",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "AzureMySqlTable1",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "Set variable1",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "Array",
+							"value": [
+								1,
+								1,
+								1,
+								1,
+								5,
+								1,
+								1,
+								1,
+								1,
+								5,
+								1,
+								1,
+								1,
+								1,
+								5,
+								1,
+								1,
+								1,
+								1,
+								5,
+								1,
+								1,
+								1,
+								1,
+								5
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"Array": {
+						"type": "Array"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-08-13T05:22:09Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SnowflakeTest')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "SFSrc",
+						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SnowflakeV2Source",
+								"exportSettings": {
+									"type": "SnowflakeExportCopyCommand"
+								}
+							},
+							"sink": {
+								"type": "SnowflakeV2Sink",
+								"importSettings": {
+									"type": "SnowflakeImportCopyCommand",
+									"storageIntegration": "test"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "SnowflakeTableV2",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "SnowflakeTableV2",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Script1",
+						"type": "Script",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "Snowflake2Trial",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "USE SCHEMA PUBLIC;\nALTER SESSION SET LOCK_TIMEOUT = 10;\nSELECT COUNT(*) FROM SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL_OLD.CUSTOMER;",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"SnowflakeOutput": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-12-22T01:56:08Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/livemodetest')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"description": "test",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "AzureSqlTablelivemode",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AzureSqlTablelivemode",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-12-29T09:47:51Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline3')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Execute Pipeline1",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"policy": {
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Databricks",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Notebook1",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "Execute Pipeline1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Users/yofe@microsoft.com/TestNotebook"
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureDatabricks1",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Notebook1_copy1",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "Notebook1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Users/yofe@microsoft.com/TestNotebook"
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureDatabricks1",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "ParentChild"
+				},
+				"annotations": [],
+				"lastPublishTime": "2026-04-09T07:28:05Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlTableSHIR')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseSHIR",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Col",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "StrSrc"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DelimitedHanziDS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "FileServer1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "FileServerLocation",
+						"fileName": "hanzitest.csv"
+					},
+					"columnDelimiter": ",",
+					"encodingName": "UTF-16LE",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "hanzi",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/InformixSrc')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "InformixLS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "InformixTable",
+				"schema": [],
+				"typeProperties": {
+					"tableName": "informix.uw_mres_log"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MySQLTableLegacy')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "MySqlLegacy",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "MySqlTable",
+				"typeProperties": {
+					"tableName": "datetimetest"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MySqlTable1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "MySql1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "MySqlTable",
+				"schema": [],
+				"typeProperties": {
+					"tableName": "`datetimetest`"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/OdbcTableMySQL')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "OdbcMySQL",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "OdbcTable",
+				"schema": [],
+				"typeProperties": {
+					"tableName": "`datetimetest`"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SapHanaTable1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SapHana1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SapHanaTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "FOO",
+					"table": "SAMPLETABLEWith10M"
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
